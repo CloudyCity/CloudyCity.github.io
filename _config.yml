@@ -7,14 +7,25 @@ title: 刀疤城的技术博客
 subtitle:
 description:
 author: 刀疤城
-language:
+language: zh-Hans
 timezone:
 
+# 后台账号密码（密码原文：R68gKa24）
+admin:
+  username: CloudyCity
+  password_hash: $2a$10$bficVTdBiCUzYfa2n0iMXONiLfILWFYusKUPJKbnRRuR1qVuJBouC
+  secret: 5M#4d8Yb$39hnbWSUWw#HQ%pgQW*u5nlTWU2mLry%8vBV!&*81K0cpzLsf&bin98
+
+# abbrlink 固定短链接
+abbrlink:
+  alg: crc16  #support crc16(default) and crc32
+  rep: hex    #support dec(default) and hex
+  
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://cloudycity.github.io/
 root: /
-permalink: :year/:month/:day/:title/
+permalink: p/:abbrlink.html 
 permalink_defaults:
 
 # Directory
@@ -72,7 +83,8 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: jacman
+theme: next
+#theme: jacman
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
