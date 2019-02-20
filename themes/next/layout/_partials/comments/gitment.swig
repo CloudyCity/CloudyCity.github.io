@@ -1,5 +1,5 @@
 {% if theme.gitment.enable %}
-     {% set id = post.number %}
+     {% set id = page.number %}
      {% set owner = theme.gitment.githubID %}
      {% set repo = theme.gitment.repo %}
      {% set cid = theme.gitment.ClientID %}
