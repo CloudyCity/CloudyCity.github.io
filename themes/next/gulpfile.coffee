@@ -14,6 +14,7 @@ gulp.task 'lint', ->
     './source/js/src/algolia-search.js',
     './source/js/src/bootstrap.js',
     './source/js/src/post-details.js',
+    './source/js/src/gitment.js',
     './source/js/src/schemes/pisces.js'
   ]).pipe jshint()
     .pipe jshint.reporter(stylish)

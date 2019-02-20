@@ -403,7 +403,8 @@ valine:
 gitment:
     enable: true
     githubID: CloudyCity
-    repo: CloudyCity.github.io # gitment-comments
+    repo: CloudyCity.github.io 
+    #repo: gitment-comments
     ClientID: 4304b7f4fa32ac454301
     ClientSecret: e8b72b9942f12da088f33fac5a520156430fed33
     lazy: false

@@ -1,14 +1,15 @@
 {% if theme.gitment.enable %}
+     {% set id = post.number %}
      {% set owner = theme.gitment.githubID %}
      {% set repo = theme.gitment.repo %}
      {% set cid = theme.gitment.ClientID %}
      {% set cs = theme.gitment.ClientSecret %}
      <link rel="stylesheet" href="https://www.wenjunjiang.win/css/gitment.css">
-     <script src="https://www.wenjunjiang.win/js/gitment.js"></script>
+     <script type="text/javascript" src="{{ url_for(theme.js) }}/src/gitment.js"></script>
      {% if not theme.gitment.lazy %}
          <script type="text/javascript">
              var gitment = new Gitment({
-                 id: document.location.pathname, 
+                 id: '{{id}}', 
                  owner: '{{owner}}',
                  repo: '{{repo}}',
                  oauth: {
@@ -23,7 +24,7 @@
                  document.getElementById("gitment-display-button").style.display = "none";
                  document.getElementById("gitment-container").style.display = "block";
                  var gitment = new Gitment({
-                     id: document.location.pathname, 
+                     id: '{{id}}', 
                      owner: '{{owner}}',
                      repo: '{{repo}}',
                      oauth: {

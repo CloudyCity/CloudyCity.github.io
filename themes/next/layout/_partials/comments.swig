@@ -1,3 +1,5 @@
+{% include './comments/gitment.swig' %}
+
 {% if page.comments %}
 
   {% if (theme.duoshuo and theme.duoshuo.shortname) or theme.duoshuo_shortname %}
@@ -59,10 +61,6 @@
     {% else %}
         <div id="gitment-container"></div>
     {% endif %}
-
-  {% elseif theme.valine.appid and theme.valine.appkey %}
-    <div class="comments" id="comments">
-    </div>
   {% endif %}
 
 {% endif %}
