@@ -10,6 +10,18 @@ author: CloudyCity
 language: zh-Hans
 timezone:
 
+# 站点地图
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
+# 爬虫follow名单
+# nofollow:
+#   enable: true
+#   exclude: # 例外链接
+#     - www.cloudycity.xyz
+
 # 后台账号密码（密码原文：R68gKa24）
 admin:
   username: CloudyCity
@@ -23,7 +35,7 @@ abbrlink:
   
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://cloudycity.github.io/
+url: https://www.cloudycity.xyz/
 root: /
 permalink: p/:abbrlink.html 
 permalink_defaults:
@@ -36,7 +48,7 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render:
+skip_render: README.md
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -84,7 +96,7 @@ pagination_dir: page
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: next
-#theme: jacman
+plugins: hexo-generate-feed
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

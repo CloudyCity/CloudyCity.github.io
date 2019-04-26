@@ -210,6 +210,7 @@
                  <span class="post-meta-item-text">{{__('post.visitors')}}&#58;</span>
                {% endif %}
                  <span class="leancloud-visitors-count"></span>
+                 <span>°C</span>
              </span>
           {% endif %}
 
@@ -230,11 +231,8 @@
                   <i class="fa fa-file-word-o"></i>
                 </span>
                 {% if theme.post_wordcount.item_text %}
-                  <span class="post-meta-item-text">{{ __('post.wordcount') }}&#58;</span>
+                  <span class="post-meta-item-text">{{ __('post.wordcount') }}{{ wordcount(post.content) }}字</span>
                 {% endif %}
-                <span title="{{ __('post.wordcount') }}">
-                  {{ wordcount(post.content) }}
-                </span>
               {% endif %}
 
               {% if theme.post_wordcount.wordcount and theme.post_wordcount.min2read %}
@@ -246,11 +244,8 @@
                   <i class="fa fa-clock-o"></i>
                 </span>
                 {% if theme.post_wordcount.item_text %}
-                  <span class="post-meta-item-text">{{ __('post.min2read') }} &asymp;</span>
+                  <span class="post-meta-item-text">{{ __('post.min2read') }}{{ min2read(post.content) }}分钟</span>
                 {% endif %}
-                <span title="{{ __('post.min2read') }}">
-                  {{ min2read(post.content) }}
-                </span>
               {% endif %}
             </div>
           {% endif %}
@@ -356,7 +351,7 @@
       {% if post.tags and post.tags.length and not is_index %}
         <div class="post-tags">
           {% for tag in post.tags %}
-            <a href="{{ url_for(tag.path) }}" rel="tag"># {{ tag.name }}</a>
+            <a href="{{ url_for(tag.path) }}" rel="tag"><i class="fa fa-tag"></i> {{ tag.name }}</a>
           {% endfor %}
         </div>
       {% endif %}
