@@ -29,7 +29,7 @@ abbrlink:
   
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://www.cloudycity.xyz/
+url: https://www.cloudycity.me
 root: /
 permalink: p/:abbrlink.html 
 permalink_defaults:
@@ -98,6 +98,5 @@ deploy:
   type: git
   repo: 
     github: git@github.com:CloudyCity/CloudyCity.github.io.git
-    # coding: git@git.coding.net:cloudycity/cloudycity.git
-    # gitee: git@gitee.com:cloudycity/CloudyCity.git
+    coding: git@git.coding.net:cloudycity/cloudycity.git
   branch: master
