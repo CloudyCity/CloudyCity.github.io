@@ -98,5 +98,4 @@ deploy:
   type: git
   repo: 
     github: git@github.com:CloudyCity/CloudyCity.github.io.git
-    coding: git@git.coding.net:cloudycity/cloudycity.git
   branch: master
