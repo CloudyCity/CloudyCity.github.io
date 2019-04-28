@@ -22,12 +22,6 @@ baidusitemap:
 #   exclude: # 例外链接
 #     - www.cloudycity.xyz
 
-# 后台账号密码（密码原文：R68gKa24）
-admin:
-  username: CloudyCity
-  password_hash: $2a$10$bficVTdBiCUzYfa2n0iMXONiLfILWFYusKUPJKbnRRuR1qVuJBouC
-  secret: 5M#4d8Yb$39hnbWSUWw#HQ%pgQW*u5nlTWU2mLry%8vBV!&*81K0cpzLsf&bin98
-
 # abbrlink 固定短链接
 abbrlink:
   alg: crc16  #support crc16(default) and crc32
@@ -102,5 +96,8 @@ plugins: hexo-generate-feed
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:CloudyCity/CloudyCity.github.io.git
+  repo: 
+    github: git@github.com:CloudyCity/CloudyCity.github.io.git
+    # coding: git@git.coding.net:cloudycity/cloudycity.git
+    # gitee: git@gitee.com:cloudycity/CloudyCity.git
   branch: master
