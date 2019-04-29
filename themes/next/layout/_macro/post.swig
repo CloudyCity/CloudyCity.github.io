@@ -214,6 +214,17 @@
              </span>
           {% endif %}
 
+          {# TOP #}
+          {% if post.top %}
+            <span class="post-top">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-thumb-tack"></i>
+              </span>
+              <font>TOP</font>
+            </span>
+          {% endif %}
+
           {% if not is_index and theme.busuanzi_count.enable and theme.busuanzi_count.page_pv %}
             <span class="post-meta-divider">|</span>
             <span class="page-pv">{{ theme.busuanzi_count.page_pv_header }}

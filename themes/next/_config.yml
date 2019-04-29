@@ -619,11 +619,11 @@ algolia_search:
 # Local search
 # Dependencies: https://github.com/flashlab/hexo-generator-search
 local_search:
-  enable: false
-  # if auto, trigger search by changing input
-  # if manual, trigger search by pressing enter key or search button
+  enable: true
+  # auto表示改变输入就自动触发搜索
+  # manual表示按下回车键或搜索按钮才触发搜索
   trigger: auto
-  # show top n results per article, show all results by setting to -1
+  # 这里的数字n表示显示每篇文章搜索到的n个结果,-1表示显示每篇文章搜索到的全部结果(不建议)
   top_n_per_article: 1
 
 
