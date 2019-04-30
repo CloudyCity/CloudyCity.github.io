@@ -413,7 +413,7 @@ gitment:
     # https://www.cloudycity.xyz 对应的授权应用
     #ClientID: 6b228ef9984d30b7421c
     #ClientSecret: ba75654bed5741584ba7e8e89c22240fd194771e
-    lazy: true
+    lazy: false
     
 #gitment:
 #  enable: true
@@ -690,7 +690,7 @@ motion:
 fancybox: true
 
 # Progress bar in the top during page loading.
-pace: true
+pace: false
 # Themes list:
 #pace-theme-big-counter
 #pace-theme-bounce

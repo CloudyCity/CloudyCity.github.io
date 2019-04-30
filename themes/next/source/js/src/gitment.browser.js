@@ -134,7 +134,7 @@ function __extends(d, b) {
  * 1) detect when they are being _used_ and report this (using reportObserved). This allows mobx to make the connection between running functions and the data they used
  * 2) they should notify mobx whenever they have _changed_. This way mobx can re-run any functions (derivations) that are using this atom.
  */
-var BaseAtom = /** @class */function () {
+var BaseAtom = function () {
     /**
      * Create a new atom. For debugging purposes it is recommended to give it a name.
      * The onBecomeObserved and onBecomeUnobserved callbacks can be used for resource management.
@@ -173,7 +173,7 @@ var BaseAtom = /** @class */function () {
     };
     return BaseAtom;
 }();
-var Atom = /** @class */function (_super) {
+var Atom = function (_super) {
     __extends(Atom, _super);
     /**
      * Create a new atom. For debugging purposes it is recommended to give it a name.
@@ -320,11 +320,9 @@ var MAX_SPLICE_SIZE = 10000; // See e.g. https://github.com/mobxjs/mobx/issues/8
 var safariPrototypeSetterInheritanceBug = function () {
     var v = false;
     var p = {};
-    Object.defineProperty(p, "0", {
-        set: function set() {
+    Object.defineProperty(p, "0", { set: function set() {
             v = true;
-        }
-    });
+        } });
     Object.create(p)["0"] = 1;
     return v === false;
 }();
@@ -335,7 +333,7 @@ var safariPrototypeSetterInheritanceBug = function () {
  */
 var OBSERVABLE_ARRAY_BUFFER_SIZE = 0;
 // Typescript workaround to make sure ObservableArray extends Array
-var StubArray = /** @class */function () {
+var StubArray = function () {
     function StubArray() {}
     return StubArray;
 }();
@@ -349,20 +347,7 @@ function inherit(ctor, proto) {
     }
 }
 inherit(StubArray, Array.prototype);
-// Weex freeze Array.prototype
-// Make them writeable and configurable in prototype chain
-// https://github.com/alibaba/weex/pull/1529
-if (Object.isFrozen(Array)) {
-
-    ["constructor", "push", "shift", "concat", "pop", "unshift", "replace", "find", "findIndex", "splice", "reverse", "sort"].forEach(function (key) {
-        Object.defineProperty(StubArray.prototype, key, {
-            configurable: true,
-            writable: true,
-            value: Array.prototype[key]
-        });
-    });
-}
-var ObservableArrayAdministration = /** @class */function () {
+var ObservableArrayAdministration = function () {
     function ObservableArrayAdministration(name, enhancer, array, owned) {
         this.array = array;
         this.owned = owned;
@@ -468,9 +453,7 @@ var ObservableArrayAdministration = /** @class */function () {
         var change = notify || notifySpy ? {
             object: this.array,
             type: "update",
-            index: index,
-            newValue: newValue,
-            oldValue: oldValue
+            index: index, newValue: newValue, oldValue: oldValue
         } : null;
         if (notifySpy) spyReportStart(change);
         this.atom.reportChanged();
@@ -483,9 +466,7 @@ var ObservableArrayAdministration = /** @class */function () {
         var change = notify || notifySpy ? {
             object: this.array,
             type: "splice",
-            index: index,
-            removed: removed,
-            added: added,
+            index: index, removed: removed, added: added,
             removedCount: removed.length,
             addedCount: added.length
         } : null;
@@ -497,7 +478,7 @@ var ObservableArrayAdministration = /** @class */function () {
     };
     return ObservableArrayAdministration;
 }();
-var ObservableArray = /** @class */function (_super) {
+var ObservableArray = function (_super) {
     __extends(ObservableArray, _super);
     function ObservableArray(initialValues, enhancer, name, owned) {
         if (name === void 0) {
@@ -579,11 +560,11 @@ var ObservableArray = /** @class */function (_super) {
         }return -1;
     };
     /*
-     * functions that do alter the internal structure of the array, (based on lib.es6.d.ts)
-     * since these functions alter the inner structure of the array, the have side effects.
-     * Because the have side effects, they should not be used in computed function,
-     * and for that reason the do not call dependencyState.notifyObserved
-     */
+        functions that do alter the internal structure of the array, (based on lib.es6.d.ts)
+        since these functions alter the inner structure of the array, the have side effects.
+        Because the have side effects, they should not be used in computed function,
+        and for that reason the do not call dependencyState.notifyObserved
+        */
     ObservableArray.prototype.splice = function (index, deleteCount) {
         var newItems = [];
         for (var _i = 2; _i < arguments.length; _i++) {
@@ -667,7 +648,6 @@ var ObservableArray = /** @class */function (_super) {
         if (fromIndex < toIndex) {
             newItems = oldItems.slice(0, fromIndex).concat(oldItems.slice(fromIndex + 1, toIndex + 1), [oldItems[fromIndex]], oldItems.slice(toIndex + 1));
         } else {
-            // toIndex < fromIndex
             newItems = oldItems.slice(0, toIndex).concat([oldItems[fromIndex]], oldItems.slice(toIndex, fromIndex), oldItems.slice(fromIndex + 1));
         }
         this.replace(newItems);
@@ -696,8 +676,7 @@ var ObservableArray = /** @class */function (_super) {
                 var change = interceptChange(adm, {
                     type: "update",
                     object: this,
-                    index: index,
-                    newValue: newValue
+                    index: index, newValue: newValue
                 });
                 if (!change) return;
                 newValue = change.newValue;
@@ -731,6 +710,9 @@ Object.defineProperty(ObservableArray.prototype, "length", {
         this.$mobx.setArrayLength(newLength);
     }
 });
+/**
+ * Wrap function from prototype
+ */
 ["every", "filter", "forEach", "indexOf", "join", "lastIndexOf", "map", "reduce", "reduceRight", "slice", "some", "toString", "toLocaleString"].forEach(function (funcName) {
     var baseFunc = Array.prototype[funcName];
     invariant(typeof baseFunc === "function", "Base function not defined on Array prototype: '" + funcName + "'");
@@ -772,7 +754,7 @@ function isObservableArray(thing) {
 }
 
 var UNCHANGED = {};
-var ObservableValue = /** @class */function (_super) {
+var ObservableValue = function (_super) {
     __extends(ObservableValue, _super);
     function ObservableValue(value, enhancer, name, notifySpy) {
         if (name === void 0) {
@@ -805,8 +787,7 @@ var ObservableValue = /** @class */function (_super) {
                 spyReportStart({
                     type: "update",
                     object: this,
-                    newValue: newValue,
-                    oldValue: oldValue
+                    newValue: newValue, oldValue: oldValue
                 });
             }
             this.setNewValue(newValue);
@@ -816,11 +797,7 @@ var ObservableValue = /** @class */function (_super) {
     ObservableValue.prototype.prepareNewValue = function (newValue) {
         checkIfStateModificationsAreAllowed(this);
         if (hasInterceptors(this)) {
-            var change = interceptChange(this, {
-                object: this,
-                type: "update",
-                newValue: newValue
-            });
+            var change = interceptChange(this, { object: this, type: "update", newValue: newValue });
             if (!change) return UNCHANGED;
             newValue = change.newValue;
         }
@@ -836,8 +813,7 @@ var ObservableValue = /** @class */function (_super) {
             notifyListeners(this, {
                 type: "update",
                 object: this,
-                newValue: newValue,
-                oldValue: oldValue
+                newValue: newValue, oldValue: oldValue
             });
         }
     };
@@ -872,43 +848,44 @@ ObservableValue.prototype[primitiveSymbol()] = ObservableValue.prototype.valueOf
 var isObservableValue = createInstanceofPredicate("ObservableValue", ObservableValue);
 
 var messages = {
-    m001: "It is not allowed to assign new values to @action fields",
-    m002: "`runInAction` expects a function",
-    m003: "`runInAction` expects a function without arguments",
-    m004: "autorun expects a function",
-    m005: "Warning: attempted to pass an action to autorun. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
-    m006: "Warning: attempted to pass an action to autorunAsync. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
-    m007: "reaction only accepts 2 or 3 arguments. If migrating from MobX 2, please provide an options object",
-    m008: "wrapping reaction expression in `asReference` is no longer supported, use options object instead",
-    m009: "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'. It looks like it was used on a property.",
-    m010: "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'",
-    m011: "First argument to `computed` should be an expression. If using computed as decorator, don't pass it arguments",
-    m012: "computed takes one or two arguments if used as function",
-    m013: "[mobx.expr] 'expr' should only be used inside other reactive functions.",
-    m014: "extendObservable expected 2 or more arguments",
-    m015: "extendObservable expects an object as first argument",
-    m016: "extendObservable should not be used on maps, use map.merge instead",
-    m017: "all arguments of extendObservable should be objects",
-    m018: "extending an object with another observable (object) is not supported. Please construct an explicit propertymap, using `toJS` if need. See issue #540",
-    m019: "[mobx.isObservable] isObservable(object, propertyName) is not supported for arrays and maps. Use map.has or array.length instead.",
-    m020: "modifiers can only be used for individual object properties",
-    m021: "observable expects zero or one arguments",
-    m022: "@observable can not be used on getters, use @computed instead",
-    m024: "whyRun() can only be used if a derivation is active, or by passing an computed value / reaction explicitly. If you invoked whyRun from inside a computation; the computation is currently suspended but re-evaluating because somebody requested its value.",
-    m025: "whyRun can only be used on reactions and computed values",
-    m026: "`action` can only be invoked on functions",
-    m028: "It is not allowed to set `useStrict` when a derivation is running",
-    m029: "INTERNAL ERROR only onBecomeUnobserved shouldn't be called twice in a row",
-    m030a: "Since strict-mode is enabled, changing observed observable values outside actions is not allowed. Please wrap the code in an `action` if this change is intended. Tried to modify: ",
-    m030b: "Side effects like changing state are not allowed at this point. Are you trying to modify state from, for example, the render function of a React component? Tried to modify: ",
-    m031: "Computed values are not allowed to cause side effects by changing observables that are already being observed. Tried to modify: ",
-    m032: "* This computation is suspended (not in use by any reaction) and won't run automatically.\n	Didn't expect this computation to be suspended at this point?\n	  1. Make sure this computation is used by a reaction (reaction, autorun, observer).\n	  2. Check whether you are using this computation synchronously (in the same stack as they reaction that needs it).",
-    m033: "`observe` doesn't support the fire immediately property for observable maps.",
-    m034: "`mobx.map` is deprecated, use `new ObservableMap` or `mobx.observable.map` instead",
-    m035: "Cannot make the designated object observable; it is not extensible",
-    m036: "It is not possible to get index atoms from arrays",
-    m037: "Hi there! I'm sorry you have just run into an exception.\nIf your debugger ends up here, know that some reaction (like the render() of an observer component, autorun or reaction)\nthrew an exception and that mobx caught it, to avoid that it brings the rest of your application down.\nThe original cause of the exception (the code that caused this reaction to run (again)), is still in the stack.\n\nHowever, more interesting is the actual stack trace of the error itself.\nHopefully the error is an instanceof Error, because in that case you can inspect the original stack of the error from where it was thrown.\nSee `error.stack` property, or press the very subtle \"(...)\" link you see near the console.error message that probably brought you here.\nThat stack is more interesting than the stack of this console.error itself.\n\nIf the exception you see is an exception you created yourself, make sure to use `throw new Error(\"Oops\")` instead of `throw \"Oops\"`,\nbecause the javascript environment will only preserve the original stack trace in the first form.\n\nYou can also make sure the debugger pauses the next time this very same exception is thrown by enabling \"Pause on caught exception\".\n(Note that it might pause on many other, unrelated exception as well).\n\nIf that all doesn't help you out, feel free to open an issue https://github.com/mobxjs/mobx/issues!\n",
-    m038: "Missing items in this list?\n    1. Check whether all used values are properly marked as observable (use isObservable to verify)\n    2. Make sure you didn't dereference values too early. MobX observes props, not primitives. E.g: use 'person.name' instead of 'name' in your computation.\n"
+    "m001": "It is not allowed to assign new values to @action fields",
+    "m002": "`runInAction` expects a function",
+    "m003": "`runInAction` expects a function without arguments",
+    "m004": "autorun expects a function",
+    "m005": "Warning: attempted to pass an action to autorun. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
+    "m006": "Warning: attempted to pass an action to autorunAsync. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
+    "m007": "reaction only accepts 2 or 3 arguments. If migrating from MobX 2, please provide an options object",
+    "m008": "wrapping reaction expression in `asReference` is no longer supported, use options object instead",
+    "m009": "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'. It looks like it was used on a property.",
+    "m010": "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'",
+    "m011": "First argument to `computed` should be an expression. If using computed as decorator, don't pass it arguments",
+    "m012": "computed takes one or two arguments if used as function",
+    "m013": "[mobx.expr] 'expr' should only be used inside other reactive functions.",
+    "m014": "extendObservable expected 2 or more arguments",
+    "m015": "extendObservable expects an object as first argument",
+    "m016": "extendObservable should not be used on maps, use map.merge instead",
+    "m017": "all arguments of extendObservable should be objects",
+    "m018": "extending an object with another observable (object) is not supported. Please construct an explicit propertymap, using `toJS` if need. See issue #540",
+    "m019": "[mobx.isObservable] isObservable(object, propertyName) is not supported for arrays and maps. Use map.has or array.length instead.",
+    "m020": "modifiers can only be used for individual object properties",
+    "m021": "observable expects zero or one arguments",
+    "m022": "@observable can not be used on getters, use @computed instead",
+    "m023": "Using `transaction` is deprecated, use `runInAction` or `(@)action` instead.",
+    "m024": "whyRun() can only be used if a derivation is active, or by passing an computed value / reaction explicitly. If you invoked whyRun from inside a computation; the computation is currently suspended but re-evaluating because somebody requested its value.",
+    "m025": "whyRun can only be used on reactions and computed values",
+    "m026": "`action` can only be invoked on functions",
+    "m028": "It is not allowed to set `useStrict` when a derivation is running",
+    "m029": "INTERNAL ERROR only onBecomeUnobserved shouldn't be called twice in a row",
+    "m030a": "Since strict-mode is enabled, changing observed observable values outside actions is not allowed. Please wrap the code in an `action` if this change is intended. Tried to modify: ",
+    "m030b": "Side effects like changing state are not allowed at this point. Are you trying to modify state from, for example, the render function of a React component? Tried to modify: ",
+    "m031": "Computed values are not allowed to not cause side effects by changing observables that are already being observed. Tried to modify: ",
+    "m032": "* This computation is suspended (not in use by any reaction) and won't run automatically.\n	Didn't expect this computation to be suspended at this point?\n	  1. Make sure this computation is used by a reaction (reaction, autorun, observer).\n	  2. Check whether you are using this computation synchronously (in the same stack as they reaction that needs it).",
+    "m033": "`observe` doesn't support the fire immediately property for observable maps.",
+    "m034": "`mobx.map` is deprecated, use `new ObservableMap` or `mobx.observable.map` instead",
+    "m035": "Cannot make the designated object observable; it is not extensible",
+    "m036": "It is not possible to get index atoms from arrays",
+    "m037": "Hi there! I'm sorry you have just run into an exception.\nIf your debugger ends up here, know that some reaction (like the render() of an observer component, autorun or reaction)\nthrew an exception and that mobx caught it, to avoid that it brings the rest of your application down.\nThe original cause of the exception (the code that caused this reaction to run (again)), is still in the stack.\n\nHowever, more interesting is the actual stack trace of the error itself.\nHopefully the error is an instanceof Error, because in that case you can inspect the original stack of the error from where it was thrown.\nSee `error.stack` property, or press the very subtle \"(...)\" link you see near the console.error message that probably brought you here.\nThat stack is more interesting than the stack of this console.error itself.\n\nIf the exception you see is an exception you created yourself, make sure to use `throw new Error(\"Oops\")` instead of `throw \"Oops\"`,\nbecause the javascript environment will only preserve the original stack trace in the first form.\n\nYou can also make sure the debugger pauses the next time this very same exception is thrown by enabling \"Pause on caught exception\".\n(Note that it might pause on many other, unrelated exception as well).\n\nIf that all doesn't help you out, feel free to open an issue https://github.com/mobxjs/mobx/issues!\n",
+    "m038": "Missing items in this list?\n    1. Check whether all used values are properly marked as observable (use isObservable to verify)\n    2. Make sure you didn't dereference values too early. MobX observes props, not primitives. E.g: use 'person.name' instead of 'name' in your computation.\n"
 };
 function getMessage(id) {
     return messages[id];
@@ -998,7 +975,7 @@ function allowStateChangesEnd(prev) {
 }
 
 /**
- * Constructs a decorator, that normalizes the differences between
+ * Construcs a decorator, that normalizes the differences between
  * TypeScript and Babel. Mainly caused by the fact that legacy-decorator cannot assign
  * values during instance creation to properties that have a getter setter.
  *
@@ -1062,8 +1039,7 @@ allowCustomArguments) {
                 onInitialize(instance, key, initializer_1 ? initializer_1.call(instance) : value_1, customArgs, descriptor);
             });
             return {
-                enumerable: enumerable,
-                configurable: true,
+                enumerable: enumerable, configurable: true,
                 get: function get() {
                     if (this.__mobxDidRunLazyInitializers !== true) runLazyInitializers(this);
                     return _get.call(this, key);
@@ -1148,9 +1124,6 @@ function namedActionDecorator(name) {
             descriptor.configurable = true;
             return descriptor;
         }
-        if (descriptor !== undefined && descriptor.get !== undefined) {
-            throw new Error("[mobx] action is not expected to be used with getters");
-        }
         // bound instance methods
         return actionFieldDecorator(name).apply(this, arguments);
     };
@@ -1174,134 +1147,6 @@ function defineBoundAction(target, propertyName, fn) {
     res.isMobxAction = true;
     addHiddenProp(target, propertyName, res);
 }
-
-var toString = Object.prototype.toString;
-function deepEqual(a, b) {
-    return eq(a, b);
-}
-// Copied from https://github.com/jashkenas/underscore/blob/5c237a7c682fb68fd5378203f0bf22dce1624854/underscore.js#L1186-L1289
-// Internal recursive comparison function for `isEqual`.
-function eq(a, b, aStack, bStack) {
-    // Identical objects are equal. `0 === -0`, but they aren't identical.
-    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
-    if (a === b) return a !== 0 || 1 / a === 1 / b;
-    // `null` or `undefined` only equal to itself (strict comparison).
-    if (a == null || b == null) return false;
-    // `NaN`s are equivalent, but non-reflexive.
-    if (a !== a) return b !== b;
-    // Exhaust primitive checks
-    var type = typeof a === "undefined" ? "undefined" : _typeof(a);
-    if (type !== "function" && type !== "object" && (typeof b === "undefined" ? "undefined" : _typeof(b)) != "object") return false;
-    return deepEq(a, b, aStack, bStack);
-}
-// Internal recursive comparison function for `isEqual`.
-function deepEq(a, b, aStack, bStack) {
-    // Unwrap any wrapped objects.
-    a = unwrap(a);
-    b = unwrap(b);
-    // Compare `[[Class]]` names.
-    var className = toString.call(a);
-    if (className !== toString.call(b)) return false;
-    switch (className) {
-        // Strings, numbers, regular expressions, dates, and booleans are compared by value.
-        case "[object RegExp]":
-        // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
-        case "[object String]":
-            // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
-            // equivalent to `new String("5")`.
-            return "" + a === "" + b;
-        case "[object Number]":
-            // `NaN`s are equivalent, but non-reflexive.
-            // Object(NaN) is equivalent to NaN.
-            if (+a !== +a) return +b !== +b;
-            // An `egal` comparison is performed for other numeric values.
-            return +a === 0 ? 1 / +a === 1 / b : +a === +b;
-        case "[object Date]":
-        case "[object Boolean]":
-            // Coerce dates and booleans to numeric primitive values. Dates are compared by their
-            // millisecond representations. Note that invalid dates with millisecond representations
-            // of `NaN` are not equivalent.
-            return +a === +b;
-        case "[object Symbol]":
-            return typeof Symbol !== "undefined" && Symbol.valueOf.call(a) === Symbol.valueOf.call(b);
-    }
-    var areArrays = className === "[object Array]";
-    if (!areArrays) {
-        if ((typeof a === "undefined" ? "undefined" : _typeof(a)) != "object" || (typeof b === "undefined" ? "undefined" : _typeof(b)) != "object") return false;
-        // Objects with different constructors are not equivalent, but `Object`s or `Array`s
-        // from different frames are.
-        var aCtor = a.constructor,
-            bCtor = b.constructor;
-        if (aCtor !== bCtor && !(typeof aCtor === "function" && aCtor instanceof aCtor && typeof bCtor === "function" && bCtor instanceof bCtor) && "constructor" in a && "constructor" in b) {
-            return false;
-        }
-    }
-    // Assume equality for cyclic structures. The algorithm for detecting cyclic
-    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-    // Initializing stack of traversed objects.
-    // It's done here since we only need them for objects and arrays comparison.
-    aStack = aStack || [];
-    bStack = bStack || [];
-    var length = aStack.length;
-    while (length--) {
-        // Linear search. Performance is inversely proportional to the number of
-        // unique nested structures.
-        if (aStack[length] === a) return bStack[length] === b;
-    }
-    // Add the first object to the stack of traversed objects.
-    aStack.push(a);
-    bStack.push(b);
-    // Recursively compare objects and arrays.
-    if (areArrays) {
-        // Compare array lengths to determine if a deep comparison is necessary.
-        length = a.length;
-        if (length !== b.length) return false;
-        // Deep compare the contents, ignoring non-numeric properties.
-        while (length--) {
-            if (!eq(a[length], b[length], aStack, bStack)) return false;
-        }
-    } else {
-        // Deep compare objects.
-        var keys = Object.keys(a),
-            key;
-        length = keys.length;
-        // Ensure that both objects contain the same number of properties before comparing deep equality.
-        if (Object.keys(b).length !== length) return false;
-        while (length--) {
-            // Deep compare each member
-            key = keys[length];
-            if (!(has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
-        }
-    }
-    // Remove the first object from the stack of traversed objects.
-    aStack.pop();
-    bStack.pop();
-    return true;
-}
-function unwrap(a) {
-    if (isObservableArray(a)) return a.peek();
-    if (isObservableMap(a)) return a.entries();
-    if (isES6Map(a)) return iteratorToArray(a.entries());
-    return a;
-}
-function has(a, key) {
-    return Object.prototype.hasOwnProperty.call(a, key);
-}
-
-function identityComparer(a, b) {
-    return a === b;
-}
-function structuralComparer(a, b) {
-    return deepEqual(a, b);
-}
-function defaultComparer(a, b) {
-    return areBothNaN(a, b) || identityComparer(a, b);
-}
-var comparer = {
-    identity: identityComparer,
-    structural: structuralComparer,
-    default: defaultComparer
-};
 
 function autorun(arg1, arg2, arg3) {
     var name, view, scope;
@@ -1398,15 +1243,13 @@ function reaction(expression, effect, arg3) {
     opts.fireImmediately = arg3 === true || opts.fireImmediately === true;
     opts.delay = opts.delay || 0;
     opts.compareStructural = opts.compareStructural || opts.struct || false;
-    // TODO: creates ugly spy events, use `effect = (r) => runInAction(opts.name, () => effect(r))` instead
     effect = action(opts.name, opts.context ? effect.bind(opts.context) : effect);
     if (opts.context) {
         expression = expression.bind(opts.context);
     }
     var firstTime = true;
     var isScheduled = false;
-    var value;
-    var equals = opts.equals ? opts.equals : opts.compareStructural || opts.struct ? comparer.structural : comparer.default;
+    var nextValue;
     var r = new Reaction(opts.name, function () {
         if (firstTime || opts.delay < 1) {
             reactionRunner();
@@ -1422,12 +1265,12 @@ function reaction(expression, effect, arg3) {
         if (r.isDisposed) return;
         var changed = false;
         r.track(function () {
-            var nextValue = expression(r);
-            changed = firstTime || !equals(value, nextValue);
-            value = nextValue;
+            var v = expression(r);
+            changed = valueDidChange(opts.compareStructural, nextValue, v);
+            nextValue = v;
         });
-        if (firstTime && opts.fireImmediately) effect(value, r);
-        if (!firstTime && changed === true) effect(value, r);
+        if (firstTime && opts.fireImmediately) effect(nextValue, r);
+        if (!firstTime && changed === true) effect(nextValue, r);
         if (firstTime) firstTime = false;
     }
     r.schedule();
@@ -1437,9 +1280,7 @@ function reaction(expression, effect, arg3) {
 /**
  * A node in the state dependency root that observes other nodes, and can be observed itself.
  *
- * ComputedValue will remember the result of the computation for the duration of the batch, or
- * while being observed.
- *
+ * ComputedValue will remember result of the computation for duration of a batch, or being observed
  * During this time it will recompute only when one of its direct dependencies changed,
  * but only when it is being accessed with `ComputedValue.get()`.
  *
@@ -1453,23 +1294,21 @@ function reaction(expression, effect, arg3) {
  *
  * If at any point it's outside batch and it isn't observed: reset everything and go to 1.
  */
-var ComputedValue = /** @class */function () {
+var ComputedValue = function () {
     /**
      * Create a new computed value based on a function expression.
      *
      * The `name` property is for debug purposes only.
      *
-     * The `equals` property specifies the comparer function to use to determine if a newly produced
-     * value differs from the previous value. Two comparers are provided in the library; `defaultComparer`
-     * compares based on identity comparison (===), and `structualComparer` deeply compares the structure.
-     * Structural comparison can be convenient if you always produce an new aggregated object and
-     * don't want to notify observers if it is structurally the same.
+     * The `compareStructural` property indicates whether the return values should be compared structurally.
+     * Normally, a computed value will not notify an upstream observer if a newly produced value is strictly equal to the previously produced value.
+     * However, enabling compareStructural can be convenient if you always produce an new aggregated object and don't want to notify observers if it is structurally the same.
      * This is useful for working with vectors, mouse coordinates etc.
      */
-    function ComputedValue(derivation, scope, equals, name, setter) {
+    function ComputedValue(derivation, scope, compareStructural, name, setter) {
         this.derivation = derivation;
         this.scope = scope;
-        this.equals = equals;
+        this.compareStructural = compareStructural;
         this.dependenciesState = IDerivationState.NOT_TRACKING;
         this.observing = []; // nodes we are looking at. Our value depends on these nodes
         this.newObserving = null; // during tracking it's an array with new observed observers
@@ -1482,10 +1321,9 @@ var ComputedValue = /** @class */function () {
         this.lowestObserverState = IDerivationState.UP_TO_DATE;
         this.unboundDepsCount = 0;
         this.__mapid = "#" + getNextId();
-        this.value = new CaughtException(null);
+        this.value = undefined;
         this.isComputing = false; // to check for cycles
         this.isRunningSetter = false;
-        this.isTracing = TraceMode.NONE;
         this.name = name || "ComputedValue@" + getNextId();
         if (setter) this.setter = createAction(name + "-setter", setter);
     }
@@ -1503,16 +1341,11 @@ var ComputedValue = /** @class */function () {
     ComputedValue.prototype.get = function () {
         invariant(!this.isComputing, "Cycle detected in computation " + this.name, this.derivation);
         if (globalState.inBatch === 0) {
-            // This is an minor optimization which could be omitted to simplify the code
-            // The computedValue is accessed outside of any mobx stuff. Batch observing should be enough and don't need
-            // tracking as it will never be called again inside this batch.
+            // just for small optimization, can be droped for simplicity
+            // computed called outside of any mobx stuff. batch observing shuold be enough, don't need tracking
+            // because it will never be called again inside this batch
             startBatch();
-            if (shouldCompute(this)) {
-                if (this.isTracing !== TraceMode.NONE) {
-                    console.log("[mobx.trace] '" + this.name + "' is being read outside a reactive context and doing a full recompute");
-                }
-                this.value = this.computeValue(false);
-            }
+            if (shouldCompute(this)) this.value = this.computeValue(false);
             endBatch();
         } else {
             reportObserved(this);
@@ -1547,10 +1380,8 @@ var ComputedValue = /** @class */function () {
             });
         }
         var oldValue = this.value;
-        var wasSuspended =
-        /* see #1208 */this.dependenciesState === IDerivationState.NOT_TRACKING;
         var newValue = this.value = this.computeValue(true);
-        return wasSuspended || isCaughtException(oldValue) || isCaughtException(newValue) || !this.equals(oldValue, newValue);
+        return isCaughtException(newValue) || valueDidChange(this.compareStructural, newValue, oldValue);
     };
     ComputedValue.prototype.computeValue = function (track) {
         this.isComputing = true;
@@ -1569,6 +1400,7 @@ var ComputedValue = /** @class */function () {
         this.isComputing = false;
         return res;
     };
+
     ComputedValue.prototype.observe = function (listener, fireImmediately) {
         var _this = this;
         var firstTime = true;
@@ -1598,6 +1430,7 @@ var ComputedValue = /** @class */function () {
     ComputedValue.prototype.valueOf = function () {
         return toPrimitive(this.get());
     };
+
     ComputedValue.prototype.whyRun = function () {
         var isTracking = Boolean(globalState.trackingDerivation);
         var observing = unique(this.isComputing ? this.newObserving : this.observing).map(function (dep) {
@@ -1606,14 +1439,14 @@ var ComputedValue = /** @class */function () {
         var observers = unique(getObservers(this).map(function (dep) {
             return dep.name;
         }));
-        return "\nWhyRun? computation '" + this.name + "':\n * Running because: " + (isTracking ? "[active] the value of this computation is needed by a reaction" : this.isComputing ? "[get] The value of this computed was requested outside a reaction" : "[idle] not running at the moment") + "\n" + (this.dependenciesState === IDerivationState.NOT_TRACKING ? getMessage("m032") : " * This computation will re-run if any of the following observables changes:\n    " + joinStrings(observing) + "\n    " + (this.isComputing && isTracking ? " (... or any observable accessed during the remainder of the current run)" : "") + "\n    " + getMessage("m038") + "\n\n  * If the outcome of this computation changes, the following observers will be re-run:\n    " + joinStrings(observers) + "\n");
+        return "\nWhyRun? computation '" + this.name + "':\n * Running because: " + (isTracking ? "[active] the value of this computation is needed by a reaction" : this.isComputing ? "[get] The value of this computed was requested outside a reaction" : "[idle] not running at the moment") + "\n" + (this.dependenciesState === IDerivationState.NOT_TRACKING ? getMessage("m032") : " * This computation will re-run if any of the following observables changes:\n    " + joinStrings(observing) + "\n    " + (this.isComputing && isTracking ? " (... or any observable accessed during the remainder of the current run)" : "") + "\n\t" + getMessage("m038") + "\n\n  * If the outcome of this computation changes, the following observers will be re-run:\n    " + joinStrings(observers) + "\n");
     };
     return ComputedValue;
 }();
 ComputedValue.prototype[primitiveSymbol()] = ComputedValue.prototype.valueOf;
 var isComputedValue = createInstanceofPredicate("ComputedValue", ComputedValue);
 
-var ObservableObjectAdministration = /** @class */function () {
+var ObservableObjectAdministration = function () {
     function ObservableObjectAdministration(target, name) {
         this.target = target;
         this.name = name;
@@ -1622,10 +1455,10 @@ var ObservableObjectAdministration = /** @class */function () {
         this.interceptors = null;
     }
     /**
-     * Observes this object. Triggers for the events 'add', 'update' and 'delete'.
-     * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe
-     * for callback details
-     */
+        * Observes this object. Triggers for the events 'add', 'update' and 'delete'.
+        * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe
+        * for callback details
+        */
     ObservableObjectAdministration.prototype.observe = function (callback, fireImmediately) {
         invariant(fireImmediately !== true, "`observe` doesn't support the fire immediately property for observable objects.");
         return registerListener(this, callback);
@@ -1636,7 +1469,7 @@ var ObservableObjectAdministration = /** @class */function () {
     return ObservableObjectAdministration;
 }();
 function asObservableObject(target, name) {
-    if (isObservableObject(target) && target.hasOwnProperty("$mobx")) return target.$mobx;
+    if (isObservableObject(target)) return target.$mobx;
     invariant(Object.isExtensible(target), getMessage("m035"));
     if (!isPlainObject(target)) name = (target.constructor.name || "ObservableObject") + "@" + getNextId();
     if (!name) name = "ObservableObject@" + getNextId();
@@ -1645,7 +1478,7 @@ function asObservableObject(target, name) {
     return adm;
 }
 function defineObservablePropertyFromDescriptor(adm, propName, descriptor, defaultEnhancer) {
-    if (adm.values[propName] && !isComputedValue(adm.values[propName])) {
+    if (adm.values[propName]) {
         // already observable property
         invariant("value" in descriptor, "The property " + propName + " in " + adm.name + " is already observable, cannot redefine it as computed property");
         adm.target[propName] = descriptor.value; // the property setter will make 'value' reactive if needed.
@@ -1669,7 +1502,7 @@ function defineObservablePropertyFromDescriptor(adm, propName, descriptor, defau
         }
     } else {
         // get x() { return 3 } set x(v) { }
-        defineComputedProperty(adm, propName, descriptor.get, descriptor.set, comparer.default, true);
+        defineComputedProperty(adm, propName, descriptor.get, descriptor.set, false, true);
     }
 }
 function defineObservableProperty(adm, propName, newValue, enhancer) {
@@ -1689,9 +1522,9 @@ function defineObservableProperty(adm, propName, newValue, enhancer) {
     Object.defineProperty(adm.target, propName, generateObservablePropConfig(propName));
     notifyPropertyAddition(adm, adm.target, propName, newValue);
 }
-function defineComputedProperty(adm, propName, getter, setter, equals, asInstanceProperty) {
+function defineComputedProperty(adm, propName, getter, setter, compareStructural, asInstanceProperty) {
     if (asInstanceProperty) assertPropertyConfigurable(adm.target, propName);
-    adm.values[propName] = new ComputedValue(getter, adm.target, equals, adm.name + "." + propName, setter);
+    adm.values[propName] = new ComputedValue(getter, adm.target, compareStructural, adm.name + "." + propName, setter);
     if (asInstanceProperty) {
         Object.defineProperty(adm.target, propName, generateComputedPropConfig(propName));
     }
@@ -1737,8 +1570,7 @@ function setPropertyValue(instance, name, newValue) {
         var change = interceptChange(adm, {
             type: "update",
             object: instance,
-            name: name,
-            newValue: newValue
+            name: name, newValue: newValue
         });
         if (!change) return;
         newValue = change.newValue;
@@ -1752,8 +1584,7 @@ function setPropertyValue(instance, name, newValue) {
             type: "update",
             object: instance,
             oldValue: observable.value,
-            name: name,
-            newValue: newValue
+            name: name, newValue: newValue
         } : null;
         if (notifySpy) spyReportStart(change);
         observable.setNewValue(newValue);
@@ -1766,9 +1597,7 @@ function notifyPropertyAddition(adm, object, name, newValue) {
     var notifySpy = isSpyEnabled();
     var change = notify || notifySpy ? {
         type: "add",
-        object: object,
-        name: name,
-        newValue: newValue
+        object: object, name: name, newValue: newValue
     } : null;
     if (notifySpy) spyReportStart(change);
     if (notify) notifyListeners(adm, change);
@@ -1785,10 +1614,10 @@ function isObservableObject(thing) {
 }
 
 /**
- * Returns true if the provided value is reactive.
- * @param value object, function or array
- * @param property if property is specified, checks whether value.property is reactive.
- */
+    * Returns true if the provided value is reactive.
+    * @param value object, function or array
+    * @param propertyName if propertyName is specified, checkes whether value.propertyName is reactive.
+    */
 function isObservable(value, property) {
     if (value === null || value === undefined) return false;
     if (property !== undefined) {
@@ -1811,8 +1640,7 @@ function createDecoratorForEnhancer(enhancer) {
         defineObservableProperty(adm, name, baseValue, enhancer);
     }, function (name) {
         var observable = this.$mobx.values[name];
-        if (observable === undefined // See #505
-        ) return undefined;
+        if (observable === undefined) return undefined;
         return observable.get();
     }, function (name, value) {
         setPropertyValue(this, name, value);
@@ -1865,7 +1693,7 @@ var deepStructDecorator = createDecoratorForEnhancer(deepStructEnhancer);
 var refStructDecorator = createDecoratorForEnhancer(refStructEnhancer);
 /**
  * Turns an object, array or function into a reactive structure.
- * @param v the value which should become observable.
+ * @param value the value which should become observable.
  */
 function createObservable(v) {
     if (v === void 0) {
@@ -1884,32 +1712,33 @@ function createObservable(v) {
     // otherwise, just box it
     return observable.box(v);
 }
-var observableFactories = {
-    box: function box(value, name) {
+var IObservableFactories = function () {
+    function IObservableFactories() {}
+    IObservableFactories.prototype.box = function (value, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("box");
         return new ObservableValue(value, deepEnhancer, name);
-    },
-    shallowBox: function shallowBox(value, name) {
+    };
+    IObservableFactories.prototype.shallowBox = function (value, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowBox");
         return new ObservableValue(value, referenceEnhancer, name);
-    },
-    array: function array(initialValues, name) {
+    };
+    IObservableFactories.prototype.array = function (initialValues, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("array");
         return new ObservableArray(initialValues, deepEnhancer, name);
-    },
-    shallowArray: function shallowArray(initialValues, name) {
+    };
+    IObservableFactories.prototype.shallowArray = function (initialValues, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowArray");
         return new ObservableArray(initialValues, referenceEnhancer, name);
-    },
-    map: function map(initialValues, name) {
+    };
+    IObservableFactories.prototype.map = function (initialValues, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("map");
         return new ObservableMap(initialValues, deepEnhancer, name);
-    },
-    shallowMap: function shallowMap(initialValues, name) {
+    };
+    IObservableFactories.prototype.shallowMap = function (initialValues, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowMap");
         return new ObservableMap(initialValues, referenceEnhancer, name);
-    },
-    object: function object(props, name) {
+    };
+    IObservableFactories.prototype.object = function (props, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("object");
         var res = {};
         // convert to observable object
@@ -1917,15 +1746,15 @@ var observableFactories = {
         // add properties
         extendObservable(res, props);
         return res;
-    },
-    shallowObject: function shallowObject(props, name) {
+    };
+    IObservableFactories.prototype.shallowObject = function (props, name) {
         if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowObject");
         var res = {};
         asObservableObject(res, name);
         extendShallowObservable(res, props);
         return res;
-    },
-    ref: function ref() {
+    };
+    IObservableFactories.prototype.ref = function () {
         if (arguments.length < 2) {
             // although ref creates actually a modifier descriptor, the type of the resultig properties
             // of the object is `T` in the end, when the descriptors are interpreted
@@ -1933,8 +1762,8 @@ var observableFactories = {
         } else {
             return refDecorator.apply(null, arguments);
         }
-    },
-    shallow: function shallow() {
+    };
+    IObservableFactories.prototype.shallow = function () {
         if (arguments.length < 2) {
             // although ref creates actually a modifier descriptor, the type of the resultig properties
             // of the object is `T` in the end, when the descriptors are interpreted
@@ -1942,8 +1771,8 @@ var observableFactories = {
         } else {
             return shallowDecorator.apply(null, arguments);
         }
-    },
-    deep: function deep() {
+    };
+    IObservableFactories.prototype.deep = function () {
         if (arguments.length < 2) {
             // although ref creates actually a modifier descriptor, the type of the resultig properties
             // of the object is `T` in the end, when the descriptors are interpreted
@@ -1951,8 +1780,8 @@ var observableFactories = {
         } else {
             return deepDecorator.apply(null, arguments);
         }
-    },
-    struct: function struct() {
+    };
+    IObservableFactories.prototype.struct = function () {
         if (arguments.length < 2) {
             // although ref creates actually a modifier descriptor, the type of the resultig properties
             // of the object is `T` in the end, when the descriptors are interpreted
@@ -1960,12 +1789,16 @@ var observableFactories = {
         } else {
             return deepStructDecorator.apply(null, arguments);
         }
-    }
-};
+    };
+    return IObservableFactories;
+}();
 var observable = createObservable;
 // weird trick to keep our typings nicely with our funcs, and still extend the observable function
-Object.keys(observableFactories).forEach(function (name) {
-    return observable[name] = observableFactories[name];
+// ES6 class methods aren't enumerable, can't use Object.keys
+Object.getOwnPropertyNames(IObservableFactories.prototype).filter(function (name) {
+    return name !== "constructor";
+}).forEach(function (name) {
+    return observable[name] = IObservableFactories.prototype[name];
 });
 observable.deep.struct = observable.struct;
 observable.ref.struct = function () {
@@ -2036,8 +1869,11 @@ function refStructEnhancer(v, oldValue, name) {
 }
 
 /**
+ * @deprecated
  * During a transaction no views are updated until the end of the transaction.
  * The transaction will be run synchronously nonetheless.
+ *
+ * Deprecated to simplify api; transactions offer no real benefit above actions.
  *
  * @param action a function that updates some reactive state
  * @returns any value that was returned by the 'action' parameter.
@@ -2046,16 +1882,18 @@ function transaction(action, thisArg) {
     if (thisArg === void 0) {
         thisArg = undefined;
     }
-    startBatch();
-    try {
-        return action.apply(thisArg);
-    } finally {
-        endBatch();
+    deprecated(getMessage("m023"));
+    return runInTransaction.apply(undefined, arguments);
+}
+function runInTransaction(action, thisArg) {
+    if (thisArg === void 0) {
+        thisArg = undefined;
     }
+    return executeAction("", action);
 }
 
 var ObservableMapMarker = {};
-var ObservableMap = /** @class */function () {
+var ObservableMap = function () {
     function ObservableMap(initialData, enhancer, name) {
         if (enhancer === void 0) {
             enhancer = deepEnhancer;
@@ -2126,7 +1964,7 @@ var ObservableMap = /** @class */function () {
                 name: key
             } : null;
             if (notifySpy) spyReportStart(change);
-            transaction(function () {
+            runInTransaction(function () {
                 _this._keys.remove(key);
                 _this._updateHasMapEntry(key, false);
                 var observable$$1 = _this._data[key];
@@ -2159,8 +1997,7 @@ var ObservableMap = /** @class */function () {
                 type: "update",
                 object: this,
                 oldValue: observable$$1.value,
-                name: name,
-                newValue: newValue
+                name: name, newValue: newValue
             } : null;
             if (notifySpy) spyReportStart(change);
             observable$$1.setNewValue(newValue);
@@ -2170,7 +2007,7 @@ var ObservableMap = /** @class */function () {
     };
     ObservableMap.prototype._addValue = function (name, newValue) {
         var _this = this;
-        transaction(function () {
+        runInTransaction(function () {
             var observable$$1 = _this._data[name] = new ObservableValue(newValue, _this.enhancer, _this.name + "." + name, false);
             newValue = observable$$1.value; // value might have been changed
             _this._updateHasMapEntry(name, true);
@@ -2223,7 +2060,7 @@ var ObservableMap = /** @class */function () {
         if (isObservableMap(other)) {
             other = other.toJS();
         }
-        transaction(function () {
+        runInTransaction(function () {
             if (isPlainObject(other)) Object.keys(other).forEach(function (key) {
                 return _this.set(key, other[key]);
             });else if (Array.isArray(other)) other.forEach(function (_a) {
@@ -2238,7 +2075,7 @@ var ObservableMap = /** @class */function () {
     };
     ObservableMap.prototype.clear = function () {
         var _this = this;
-        transaction(function () {
+        runInTransaction(function () {
             untracked(function () {
                 _this.keys().forEach(_this.delete, _this);
             });
@@ -2246,18 +2083,8 @@ var ObservableMap = /** @class */function () {
     };
     ObservableMap.prototype.replace = function (values) {
         var _this = this;
-        transaction(function () {
-            // grab all the keys that are present in the new map but not present in the current map
-            // and delete them from the map, then merge the new map
-            // this will cause reactions only on changed values
-            var newKeys = getMapLikeKeys(values);
-            var oldKeys = _this.keys();
-            var missingKeys = oldKeys.filter(function (k) {
-                return newKeys.indexOf(k) === -1;
-            });
-            missingKeys.forEach(function (k) {
-                return _this.delete(k);
-            });
+        runInTransaction(function () {
+            _this.clear();
             _this.merge(values);
         });
         return this;
@@ -2271,7 +2098,7 @@ var ObservableMap = /** @class */function () {
     });
     /**
      * Returns a shallow non observable object clone of this map.
-     * Note that the values might still be observable. For a deep clone use mobx.toJS.
+     * Note that the values migth still be observable. For a deep clone use mobx.toJS.
      */
     ObservableMap.prototype.toJS = function () {
         var _this = this;
@@ -2326,7 +2153,7 @@ var isObservableMap = createInstanceofPredicate("ObservableMap", ObservableMap);
 var EMPTY_ARRAY = [];
 Object.freeze(EMPTY_ARRAY);
 function getGlobal() {
-    return typeof window !== "undefined" ? window : global;
+    return global;
 }
 function getNextId() {
     return ++globalState.mobxGuid;
@@ -2399,6 +2226,12 @@ function objectAssign() {
     }
     return res;
 }
+function valueDidChange(compareStructural, oldValue, newValue) {
+    if (typeof oldValue === 'number' && isNaN(oldValue)) {
+        return typeof newValue !== 'number' || !isNaN(newValue);
+    }
+    return compareStructural ? !deepEqual(oldValue, newValue) : oldValue !== newValue;
+}
 var prototypeHasOwnProperty = Object.prototype.hasOwnProperty;
 function hasOwnProperty(object, propName) {
     return prototypeHasOwnProperty.call(object, propName);
@@ -2431,6 +2264,54 @@ function isPropertyConfigurable(object, prop) {
 function assertPropertyConfigurable(object, prop) {
     invariant(isPropertyConfigurable(object, prop), "Cannot make property '" + prop + "' observable, it is not configurable and writable in the target object");
 }
+function getEnumerableKeys(obj) {
+    var res = [];
+    for (var key in obj) {
+        res.push(key);
+    }return res;
+}
+/**
+ * Naive deepEqual. Doesn't check for prototype, non-enumerable or out-of-range properties on arrays.
+ * If you have such a case, you probably should use this function but something fancier :).
+ */
+function deepEqual(a, b) {
+    if (a === null && b === null) return true;
+    if (a === undefined && b === undefined) return true;
+    if ((typeof a === "undefined" ? "undefined" : _typeof(a)) !== "object") return a === b;
+    var aIsArray = isArrayLike(a);
+    var aIsMap = isMapLike(a);
+    if (aIsArray !== isArrayLike(b)) {
+        return false;
+    } else if (aIsMap !== isMapLike(b)) {
+        return false;
+    } else if (aIsArray) {
+        if (a.length !== b.length) return false;
+        for (var i = a.length - 1; i >= 0; i--) {
+            if (!deepEqual(a[i], b[i])) return false;
+        }return true;
+    } else if (aIsMap) {
+        if (a.size !== b.size) return false;
+        var equals_1 = true;
+        a.forEach(function (value, key) {
+            equals_1 = equals_1 && deepEqual(b.get(key), value);
+        });
+        return equals_1;
+    } else if ((typeof a === "undefined" ? "undefined" : _typeof(a)) === "object" && (typeof b === "undefined" ? "undefined" : _typeof(b)) === "object") {
+        if (a === null || b === null) return false;
+        if (isMapLike(a) && isMapLike(b)) {
+            if (a.size !== b.size) return false;
+            // Freaking inefficient.... Create PR if you run into this :) Much appreciated!
+            return deepEqual(observable.shallowMap(a).entries(), observable.shallowMap(b).entries());
+        }
+        if (getEnumerableKeys(a).length !== getEnumerableKeys(b).length) return false;
+        for (var prop in a) {
+            if (!(prop in b)) return false;
+            if (!deepEqual(a[prop], b[prop])) return false;
+        }
+        return true;
+    }
+    return false;
+}
 function createInstanceofPredicate(name, clazz) {
     var propName = "isMobX" + name;
     clazz.prototype[propName] = true;
@@ -2438,37 +2319,18 @@ function createInstanceofPredicate(name, clazz) {
         return isObject(x) && x[propName] === true;
     };
 }
-function areBothNaN(a, b) {
-    return typeof a === "number" && typeof b === "number" && isNaN(a) && isNaN(b);
-}
 /**
  * Returns whether the argument is an array, disregarding observability.
  */
 function isArrayLike(x) {
     return Array.isArray(x) || isObservableArray(x);
 }
+function isMapLike(x) {
+    return isES6Map(x) || isObservableMap(x);
+}
 function isES6Map(thing) {
     if (getGlobal().Map !== undefined && thing instanceof getGlobal().Map) return true;
     return false;
-}
-function getMapLikeKeys(map$$1) {
-    if (isPlainObject(map$$1)) return Object.keys(map$$1);
-    if (Array.isArray(map$$1)) return map$$1.map(function (_a) {
-        var key = _a[0];
-        return key;
-    });
-    if (isES6Map(map$$1)) return Array.from(map$$1.keys());
-    if (isObservableMap(map$$1)) return map$$1.keys();
-    return fail("Cannot get keys from " + map$$1);
-}
-function iteratorToArray(it) {
-    var res = [];
-    while (true) {
-        var r = it.next();
-        if (r.done) break;
-        res.push(r.value);
-    }
-    return res;
 }
 function primitiveSymbol() {
     return typeof Symbol === "function" && Symbol.toPrimitive || "@@toPrimitive";
@@ -2481,7 +2343,7 @@ function toPrimitive(value) {
  * These values will persist if global state is reset
  */
 var persistentKeys = ["mobxGuid", "resetId", "spyListeners", "strictMode", "runId"];
-var MobXGlobals = /** @class */function () {
+var MobXGlobals = function () {
     function MobXGlobals() {
         /**
          * MobXGlobals version.
@@ -2550,31 +2412,7 @@ var MobXGlobals = /** @class */function () {
     return MobXGlobals;
 }();
 var globalState = new MobXGlobals();
-var shareGlobalStateCalled = false;
-var runInIsolationCalled = false;
-var warnedAboutMultipleInstances = false;
-{
-    var global_1 = getGlobal();
-    if (!global_1.__mobxInstanceCount) {
-        global_1.__mobxInstanceCount = 1;
-    } else {
-        global_1.__mobxInstanceCount++;
-        setTimeout(function () {
-            if (!shareGlobalStateCalled && !runInIsolationCalled && !warnedAboutMultipleInstances) {
-                warnedAboutMultipleInstances = true;
-                console.warn("[mobx] Warning: there are multiple mobx instances active. This might lead to unexpected results. See https://github.com/mobxjs/mobx/issues/1082 for details.");
-            }
-        }, 1);
-    }
-}
-function isolateGlobalState() {
-    runInIsolationCalled = true;
-    getGlobal().__mobxInstanceCount--;
-}
 function shareGlobalState() {
-    // TODO: remove in 4.0; just use peer dependencies instead.
-    deprecated("Using `shareGlobalState` is not recommended, use peer dependencies instead. See https://github.com/mobxjs/mobx/issues/1082 for details.");
-    shareGlobalStateCalled = true;
     var global = getGlobal();
     var ownState = globalState;
     /**
@@ -2600,76 +2438,6 @@ function resetGlobalState() {
     }globalState.allowStateChanges = !globalState.strictMode;
 }
 
-function getAtom(thing, property) {
-    if ((typeof thing === "undefined" ? "undefined" : _typeof(thing)) === "object" && thing !== null) {
-        if (isObservableArray(thing)) {
-            invariant(property === undefined, getMessage("m036"));
-            return thing.$mobx.atom;
-        }
-        if (isObservableMap(thing)) {
-            var anyThing = thing;
-            if (property === undefined) return getAtom(anyThing._keys);
-            var observable = anyThing._data[property] || anyThing._hasMap[property];
-            invariant(!!observable, "the entry '" + property + "' does not exist in the observable map '" + getDebugName(thing) + "'");
-            return observable;
-        }
-        // Initializers run lazily when transpiling to babel, so make sure they are run...
-        runLazyInitializers(thing);
-        if (property && !thing.$mobx) thing[property]; // See #1072 // TODO: remove in 4.0
-        if (isObservableObject(thing)) {
-            if (!property) return fail("please specify a property");
-            var observable = thing.$mobx.values[property];
-            invariant(!!observable, "no observable property '" + property + "' found on the observable object '" + getDebugName(thing) + "'");
-            return observable;
-        }
-        if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) {
-            return thing;
-        }
-    } else if (typeof thing === "function") {
-        if (isReaction(thing.$mobx)) {
-            // disposer function
-            return thing.$mobx;
-        }
-    }
-    return fail("Cannot obtain atom from " + thing);
-}
-function getAdministration(thing, property) {
-    invariant(thing, "Expecting some object");
-    if (property !== undefined) return getAdministration(getAtom(thing, property));
-    if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) return thing;
-    if (isObservableMap(thing)) return thing;
-    // Initializers run lazily when transpiling to babel, so make sure they are run...
-    runLazyInitializers(thing);
-    if (thing.$mobx) return thing.$mobx;
-    invariant(false, "Cannot obtain administration from " + thing);
-}
-function getDebugName(thing, property) {
-    var named;
-    if (property !== undefined) named = getAtom(thing, property);else if (isObservableObject(thing) || isObservableMap(thing)) named = getAdministration(thing);else named = getAtom(thing); // valid for arrays as well
-    return named.name;
-}
-
-function getDependencyTree(thing, property) {
-    return nodeToDependencyTree(getAtom(thing, property));
-}
-function nodeToDependencyTree(node) {
-    var result = {
-        name: node.name
-    };
-    if (node.observing && node.observing.length > 0) result.dependencies = unique(node.observing).map(nodeToDependencyTree);
-    return result;
-}
-function getObserverTree(thing, property) {
-    return nodeToObserverTree(getAtom(thing, property));
-}
-function nodeToObserverTree(node) {
-    var result = {
-        name: node.name
-    };
-    if (hasObservers(node)) result.observers = getObservers(node).map(nodeToObserverTree);
-    return result;
-}
-
 function hasObservers(observable) {
     return observable.observers && observable.observers.length > 0;
 }
@@ -2682,13 +2450,12 @@ function addObserver(observable, node) {
     // invariantObservers(observable);
     var l = observable.observers.length;
     if (l) {
-        // because object assignment is relatively expensive, let's not store data about index 0.
         observable.observersIndexes[node.__mapid] = l;
     }
     observable.observers[l] = node;
     if (observable.lowestObserverState > node.dependenciesState) observable.lowestObserverState = node.dependenciesState;
     // invariantObservers(observable);
-    // invariant(observable._observers.indexOf(node) !== -1, "INTERNAL ERROR didn't add node");
+    // invariant(observable._observers.indexOf(node) !== -1, "INTERNAL ERROR didnt add node");
 }
 function removeObserver(observable, node) {
     // invariant(globalState.inBatch > 0, "INTERNAL ERROR, remove should be called only inside batch");
@@ -2702,12 +2469,10 @@ function removeObserver(observable, node) {
         // deleting from _observersIndexes is straight forward, to delete from _observers, let's swap `node` with last element
         var list = observable.observers;
         var map = observable.observersIndexes;
-        var filler = list.pop(); // get last element, which should fill the place of `node`, so the array doesn't have holes
+        var filler = list.pop(); // get last element, which should fill the place of `node`, so the array doesnt have holes
         if (filler !== node) {
-            // otherwise node was the last element, which already got removed from array
             var index = map[node.__mapid] || 0; // getting index of `node`. this is the only place we actually use map.
             if (index) {
-                // map store all indexes but 0, see comment in `addObserver`
                 map[filler.__mapid] = index;
             } else {
                 delete map[filler.__mapid];
@@ -2722,7 +2487,7 @@ function removeObserver(observable, node) {
 function queueForUnobservation(observable) {
     if (!observable.isPendingUnobservation) {
         // invariant(globalState.inBatch > 0, "INTERNAL ERROR, remove should be called only inside batch");
-        // invariant(observable._observers.length === 0, "INTERNAL ERROR, should only queue for unobservation unobserved observables");
+        // invariant(observable._observers.length === 0, "INTERNAL ERROR, shuold only queue for unobservation unobserved observables");
         observable.isPendingUnobservation = true;
         globalState.pendingUnobservations.push(observable);
     }
@@ -2783,12 +2548,7 @@ function propagateChanged(observable) {
     var i = observers.length;
     while (i--) {
         var d = observers[i];
-        if (d.dependenciesState === IDerivationState.UP_TO_DATE) {
-            if (d.isTracing !== TraceMode.NONE) {
-                logTraceInfo(d, observable);
-            }
-            d.onBecomeStale();
-        }
+        if (d.dependenciesState === IDerivationState.UP_TO_DATE) d.onBecomeStale();
         d.dependenciesState = IDerivationState.STALE;
     }
     // invariantLOS(observable, "changed end");
@@ -2802,8 +2562,7 @@ function propagateChangeConfirmed(observable) {
     var i = observers.length;
     while (i--) {
         var d = observers[i];
-        if (d.dependenciesState === IDerivationState.POSSIBLY_STALE) d.dependenciesState = IDerivationState.STALE;else if (d.dependenciesState === IDerivationState.UP_TO_DATE // this happens during computing of `d`, just keep lowestObserverState up to date.
-        ) observable.lowestObserverState = IDerivationState.UP_TO_DATE;
+        if (d.dependenciesState === IDerivationState.POSSIBLY_STALE) d.dependenciesState = IDerivationState.STALE;else if (d.dependenciesState === IDerivationState.UP_TO_DATE) observable.lowestObserverState = IDerivationState.UP_TO_DATE;
     }
     // invariantLOS(observable, "confirmed end");
 }
@@ -2818,32 +2577,10 @@ function propagateMaybeChanged(observable) {
         var d = observers[i];
         if (d.dependenciesState === IDerivationState.UP_TO_DATE) {
             d.dependenciesState = IDerivationState.POSSIBLY_STALE;
-            if (d.isTracing !== TraceMode.NONE) {
-                logTraceInfo(d, observable);
-            }
             d.onBecomeStale();
         }
     }
     // invariantLOS(observable, "maybe end");
-}
-function logTraceInfo(derivation, observable) {
-    console.log("[mobx.trace] '" + derivation.name + "' is invalidated due to a change in: '" + observable.name + "'");
-    if (derivation.isTracing === TraceMode.BREAK) {
-        var lines = [];
-        printDepTree(getDependencyTree(derivation), lines, 1);
-        // prettier-ignore
-        new Function("debugger;\n/*\nTracing '" + derivation.name + "'\n\nYou are entering this break point because derivation '" + derivation.name + "' is being traced and '" + observable.name + "' is now forcing it to update.\nJust follow the stacktrace you should now see in the devtools to see precisely what piece of your code is causing this update\nThe stackframe you are looking for is at least ~6-8 stack-frames up.\n\n" + (derivation instanceof ComputedValue ? derivation.derivation.toString() : "") + "\n\nThe dependencies for this derivation are:\n\n" + lines.join("\n") + "\n*/\n    ")();
-    }
-}
-function printDepTree(tree, lines, depth) {
-    if (lines.length >= 1000) {
-        lines.push("(and many more)");
-        return;
-    }
-    lines.push("" + new Array(depth).join("\t") + tree.name); // MWE: not the fastest, but the easiest way :)
-    if (tree.dependencies) tree.dependencies.forEach(function (child) {
-        return printDepTree(child, lines, depth + 1);
-    });
 }
 
 var IDerivationState;
@@ -2862,17 +2599,11 @@ var IDerivationState;
     // having this state is second big optimization:
     // don't have to recompute on every dependency change, but only when it's needed
     IDerivationState[IDerivationState["POSSIBLY_STALE"] = 1] = "POSSIBLY_STALE";
-    // A shallow dependency has changed since last computation and the derivation
-    // will need to recompute when it's needed next.
+    // shallow dependency changed
+    // will need to recompute when it's needed
     IDerivationState[IDerivationState["STALE"] = 2] = "STALE";
 })(IDerivationState || (exports.IDerivationState = IDerivationState = {}));
-var TraceMode;
-(function (TraceMode) {
-    TraceMode[TraceMode["NONE"] = 0] = "NONE";
-    TraceMode[TraceMode["LOG"] = 1] = "LOG";
-    TraceMode[TraceMode["BREAK"] = 2] = "BREAK";
-})(TraceMode || (TraceMode = {}));
-var CaughtException = /** @class */function () {
+var CaughtException = function () {
     function CaughtException(cause) {
         this.cause = cause;
         // Empty
@@ -2883,15 +2614,14 @@ function isCaughtException(e) {
     return e instanceof CaughtException;
 }
 /**
- * Finds out whether any dependency of the derivation has actually changed.
- * If dependenciesState is 1 then it will recalculate dependencies,
+ * Finds out wether any dependency of derivation actually changed
+ * If dependenciesState is 1 it will recalculate dependencies,
  * if any dependency changed it will propagate it by changing dependenciesState to 2.
  *
- * By iterating over the dependencies in the same order that they were reported and
- * stopping on the first change, all the recalculations are only called for ComputedValues
- * that will be tracked by derivation. That is because we assume that if the first x
- * dependencies of the derivation doesn't change then the derivation should run the same way
- * up until accessing x-th dependency.
+ * By iterating over dependencies in the same order they were reported and stoping on first change
+ * all recalculations are called only for ComputedValues that will be tracked anyway by derivation.
+ * That is because we assume that if first x dependencies of derivation doesn't change
+ * than derivation shuold run the same way up until accessing x-th dependency.
  */
 function shouldCompute(derivation) {
     switch (derivation.dependenciesState) {
@@ -2973,9 +2703,10 @@ function bindDependencies(derivation) {
     var prevObserving = derivation.observing;
     var observing = derivation.observing = derivation.newObserving;
     var lowestNewObservingDerivationState = IDerivationState.UP_TO_DATE;
+    derivation.newObserving = null; // newObserving shouldn't be needed outside tracking
     // Go through all new observables and check diffValue: (this list can contain duplicates):
-    //   0: first occurrence, change to 1 and keep it
-    //   1: extra occurrence, drop it
+    //   0: first occurence, change to 1 and keep it
+    //   1: extra occurence, drop it
     var i0 = 0,
         l = derivation.unboundDepsCount;
     for (var i = 0; i < l; i++) {
@@ -2992,7 +2723,6 @@ function bindDependencies(derivation) {
         }
     }
     observing.length = i0;
-    derivation.newObserving = null; // newObserving shouldn't be needed outside tracking (statement moved down to work around FF bug, see #614)
     // Go through all old observables and check diffValue: (it is unique after last bindDependencies)
     //   0: it's not in new observables, unobserve it
     //   1: it keeps being observed, don't want to notify it. change to 0
@@ -3014,8 +2744,8 @@ function bindDependencies(derivation) {
             addObserver(dep, derivation);
         }
     }
-    // Some new observed derivations may become stale during this derivation computation
-    // so they have had no chance to propagate staleness (#916)
+    // Some new observed derivations might become stale during this derivation computation
+    // so say had no chance to propagate staleness (#916)
     if (lowestNewObservingDerivationState !== IDerivationState.UP_TO_DATE) {
         derivation.dependenciesState = lowestNewObservingDerivationState;
         derivation.onBecomeStale();
@@ -3058,45 +2788,7 @@ function changeDependenciesStateTo0(derivation) {
     }
 }
 
-function log(msg) {
-    console.log(msg);
-    return msg;
-}
-function whyRun(thing, prop) {
-    deprecated("`whyRun` is deprecated in favor of `trace`");
-    thing = getAtomFromArgs(arguments);
-    if (!thing) return log(getMessage("m024"));
-    if (isComputedValue(thing) || isReaction(thing)) return log(thing.whyRun());
-    return fail(getMessage("m025"));
-}
-function trace() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    var enterBreakPoint = false;
-    if (typeof args[args.length - 1] === "boolean") enterBreakPoint = args.pop();
-    var derivation = getAtomFromArgs(args);
-    if (!derivation) {
-        return fail("'trace(break?)' can only be used inside a tracked computed value or a Reaction. Consider passing in the computed value or reaction explicitly");
-    }
-    if (derivation.isTracing === TraceMode.NONE) {
-        console.log("[mobx.trace] '" + derivation.name + "' tracing enabled");
-    }
-    derivation.isTracing = enterBreakPoint ? TraceMode.BREAK : TraceMode.LOG;
-}
-function getAtomFromArgs(args) {
-    switch (args.length) {
-        case 0:
-            return globalState.trackingDerivation;
-        case 1:
-            return getAtom(args[0]);
-        case 2:
-            return getAtom(args[0], args[1]);
-    }
-}
-
-var Reaction = /** @class */function () {
+var Reaction = function () {
     function Reaction(name, onInvalidate) {
         if (name === void 0) {
             name = "Reaction@" + getNextId();
@@ -3114,7 +2806,6 @@ var Reaction = /** @class */function () {
         this._isScheduled = false;
         this._isTrackPending = false;
         this._isRunning = false;
-        this.isTracing = TraceMode.NONE;
     }
     Reaction.prototype.onBecomeStale = function () {
         this.schedule();
@@ -3187,7 +2878,7 @@ var Reaction = /** @class */function () {
         var message = "[mobx] Encountered an uncaught exception that was thrown by a reaction or observer component, in: '" + this;
         var messageToUser = getMessage("m037");
         console.error(message || messageToUser /* latter will not be true, make sure uglify doesn't remove */, error);
-        /** If debugging brought you here, please, read the above message :-). Tnx! */
+        /** If debugging brough you here, please, read the above message :-). Tnx! */
         if (isSpyEnabled()) {
             spyReport({
                 type: "error",
@@ -3204,9 +2895,8 @@ var Reaction = /** @class */function () {
         if (!this.isDisposed) {
             this.isDisposed = true;
             if (!this._isRunning) {
-                // if disposed while running, clean up later. Maybe not optimal, but rare case
                 startBatch();
-                clearObserving(this);
+                clearObserving(this); // if disposed while running, clean up later. Maybe not optimal, but rare case
                 endBatch();
             }
         }
@@ -3225,12 +2915,6 @@ var Reaction = /** @class */function () {
             return dep.name;
         });
         return "\nWhyRun? reaction '" + this.name + "':\n * Status: [" + (this.isDisposed ? "stopped" : this._isRunning ? "running" : this.isScheduled() ? "scheduled" : "idle") + "]\n * This reaction will re-run if any of the following observables changes:\n    " + joinStrings(observing) + "\n    " + (this._isRunning ? " (... or any observable accessed during the remainder of the current run)" : "") + "\n\t" + getMessage("m038") + "\n";
-    };
-    Reaction.prototype.trace = function (enterBreakPoint) {
-        if (enterBreakPoint === void 0) {
-            enterBreakPoint = false;
-        }
-        trace(this, enterBreakPoint);
     };
     return Reaction;
 }();
@@ -3306,23 +2990,22 @@ function asMap(data) {
     return observable.map(data || {});
 }
 
-function createComputedDecorator(equals) {
+function createComputedDecorator(compareStructural) {
     return createClassPropertyDecorator(function (target, name, _, __, originalDescriptor) {
         invariant(typeof originalDescriptor !== "undefined", getMessage("m009"));
         invariant(typeof originalDescriptor.get === "function", getMessage("m010"));
         var adm = asObservableObject(target, "");
-        defineComputedProperty(adm, name, originalDescriptor.get, originalDescriptor.set, equals, false);
+        defineComputedProperty(adm, name, originalDescriptor.get, originalDescriptor.set, compareStructural, false);
     }, function (name) {
         var observable = this.$mobx.values[name];
-        if (observable === undefined // See #505
-        ) return undefined;
+        if (observable === undefined) return undefined;
         return observable.get();
     }, function (name, value) {
         this.$mobx.values[name].set(value);
     }, false, false);
 }
-var computedDecorator = createComputedDecorator(comparer.default);
-var computedStructDecorator = createComputedDecorator(comparer.structural);
+var computedDecorator = createComputedDecorator(false);
+var computedStructDecorator = createComputedDecorator(true);
 /**
  * Decorator for class properties: @computed get value() { return expr; }.
  * For legacy purposes also invokable as ES5 observable created: `computed(() => expr)`;
@@ -3335,17 +3018,62 @@ var computed = function computed(arg1, arg2, arg3) {
     invariant(arguments.length < 3, getMessage("m012"));
     var opts = (typeof arg2 === "undefined" ? "undefined" : _typeof(arg2)) === "object" ? arg2 : {};
     opts.setter = typeof arg2 === "function" ? arg2 : opts.setter;
-    var equals = opts.equals ? opts.equals : opts.compareStructural || opts.struct ? comparer.structural : comparer.default;
-    return new ComputedValue(arg1, opts.context, equals, opts.name || arg1.name || "", opts.setter);
+    return new ComputedValue(arg1, opts.context, opts.compareStructural || opts.struct || false, opts.name || arg1.name || "", opts.setter);
 };
 computed.struct = computedStructDecorator;
-computed.equals = createComputedDecorator;
+
+function getAtom(thing, property) {
+    if ((typeof thing === "undefined" ? "undefined" : _typeof(thing)) === "object" && thing !== null) {
+        if (isObservableArray(thing)) {
+            invariant(property === undefined, getMessage("m036"));
+            return thing.$mobx.atom;
+        }
+        if (isObservableMap(thing)) {
+            var anyThing = thing;
+            if (property === undefined) return getAtom(anyThing._keys);
+            var observable = anyThing._data[property] || anyThing._hasMap[property];
+            invariant(!!observable, "the entry '" + property + "' does not exist in the observable map '" + getDebugName(thing) + "'");
+            return observable;
+        }
+        // Initializers run lazily when transpiling to babel, so make sure they are run...
+        runLazyInitializers(thing);
+        if (isObservableObject(thing)) {
+            if (!property) return fail("please specify a property");
+            var observable = thing.$mobx.values[property];
+            invariant(!!observable, "no observable property '" + property + "' found on the observable object '" + getDebugName(thing) + "'");
+            return observable;
+        }
+        if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) {
+            return thing;
+        }
+    } else if (typeof thing === "function") {
+        if (isReaction(thing.$mobx)) {
+            // disposer function
+            return thing.$mobx;
+        }
+    }
+    return fail("Cannot obtain atom from " + thing);
+}
+function getAdministration(thing, property) {
+    invariant(thing, "Expecting some object");
+    if (property !== undefined) return getAdministration(getAtom(thing, property));
+    if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) return thing;
+    if (isObservableMap(thing)) return thing;
+    // Initializers run lazily when transpiling to babel, so make sure they are run...
+    runLazyInitializers(thing);
+    if (thing.$mobx) return thing.$mobx;
+    invariant(false, "Cannot obtain administration from " + thing);
+}
+function getDebugName(thing, property) {
+    var named;
+    if (property !== undefined) named = getAtom(thing, property);else if (isObservableObject(thing) || isObservableMap(thing)) named = getAdministration(thing);else named = getAtom(thing); // valid for arrays as well
+    return named.name;
+}
 
 function isComputed(value, property) {
     if (value === null || value === undefined) return false;
     if (property !== undefined) {
         if (isObservableObject(value) === false) return false;
-        if (!value.$mobx.values[property]) return false;
         var atom = getAtom(value, property);
         return isComputedValue(atom);
     }
@@ -3373,25 +3101,26 @@ function interceptProperty(thing, property, handler) {
 }
 
 /**
- * expr can be used to create temporarily views inside views.
- * This can be improved to improve performance if a value changes often, but usually doesn't affect the outcome of an expression.
- *
- * In the following example the expression prevents that a component is rerender _each time_ the selection changes;
- * instead it will only rerenders when the current todo is (de)selected.
- *
- * reactiveComponent((props) => {
- *     const todo = props.todo;
- *     const isSelected = mobx.expr(() => props.viewState.selection === todo);
- *     return <div className={isSelected ? "todo todo-selected" : "todo"}>{todo.title}</div>
- * });
- *
- */
+    * expr can be used to create temporarily views inside views.
+    * This can be improved to improve performance if a value changes often, but usually doesn't affect the outcome of an expression.
+    *
+    * In the following example the expression prevents that a component is rerender _each time_ the selection changes;
+    * instead it will only rerenders when the current todo is (de)selected.
+    *
+    * reactiveComponent((props) => {
+    *     const todo = props.todo;
+    *     const isSelected = mobx.expr(() => props.viewState.selection === todo);
+    *     return <div className={isSelected ? "todo todo-selected" : "todo"}>{todo.title}</div>
+    * });
+    *
+    */
 function expr(expr, scope) {
     if (!isComputingDerivation()) console.warn(getMessage("m013"));
     // optimization: would be more efficient if the expr itself wouldn't be evaluated first on the next change, but just a 'changed' signal would be fired
     return computed(expr, { context: scope }).get();
 }
 
+// internal overload
 function toJS(source, detectCycles, __alreadySeen) {
     if (detectCycles === void 0) {
         detectCycles = true;
@@ -3448,12 +3177,12 @@ function createTransformer(transformer, onCleanup) {
     // This construction is used to avoid leaking refs to the objectCache directly
     var resetId = globalState.resetId;
     // Local transformer class specifically for this transformer
-    var Transformer = /** @class */function (_super) {
+    var Transformer = function (_super) {
         __extends(Transformer, _super);
         function Transformer(sourceIdentifier, sourceObject) {
             var _this = _super.call(this, function () {
                 return transformer(sourceObject);
-            }, undefined, comparer.default, "Transformer-" + transformer.name + "-" + sourceIdentifier, undefined) || this;
+            }, undefined, false, "Transformer-" + transformer.name + "-" + sourceIdentifier, undefined) || this;
             _this.sourceIdentifier = sourceIdentifier;
             _this.sourceObject = sourceObject;
             return _this;
@@ -3480,7 +3209,7 @@ function createTransformer(transformer, onCleanup) {
     };
 }
 function getMemoizationId(object) {
-    if (typeof object === "string" || typeof object === "number") return object;
+    if (typeof object === 'string' || typeof object === 'number') return object;
     if (object === null || (typeof object === "undefined" ? "undefined" : _typeof(object)) !== "object") throw new Error("[mobx] transform expected some kind of object or primitive value, got: " + object);
     var tid = object.$transformId;
     if (tid === undefined) {
@@ -3488,6 +3217,46 @@ function getMemoizationId(object) {
         addHiddenProp(object, "$transformId", tid);
     }
     return tid;
+}
+
+function log(msg) {
+    console.log(msg);
+    return msg;
+}
+function whyRun(thing, prop) {
+    switch (arguments.length) {
+        case 0:
+            thing = globalState.trackingDerivation;
+            if (!thing) return log(getMessage("m024"));
+            break;
+        case 2:
+            thing = getAtom(thing, prop);
+            break;
+    }
+    thing = getAtom(thing);
+    if (isComputedValue(thing)) return log(thing.whyRun());else if (isReaction(thing)) return log(thing.whyRun());
+    return fail(getMessage("m025"));
+}
+
+function getDependencyTree(thing, property) {
+    return nodeToDependencyTree(getAtom(thing, property));
+}
+function nodeToDependencyTree(node) {
+    var result = {
+        name: node.name
+    };
+    if (node.observing && node.observing.length > 0) result.dependencies = unique(node.observing).map(nodeToDependencyTree);
+    return result;
+}
+function getObserverTree(thing, property) {
+    return nodeToObserverTree(getAtom(thing, property));
+}
+function nodeToObserverTree(node) {
+    var result = {
+        name: node.name
+    };
+    if (hasObservers(node)) result.observers = getObservers(node).map(nodeToObserverTree);
+    return result;
 }
 
 function interceptReads(thing, propOrHandler, handler) {
@@ -3539,75 +3308,18 @@ var extras = {
     onReactionError: onReactionError,
     reserveArrayBuffer: reserveArrayBuffer,
     resetGlobalState: resetGlobalState,
-    isolateGlobalState: isolateGlobalState,
     shareGlobalState: shareGlobalState,
     spyReport: spyReport,
     spyReportEnd: spyReportEnd,
     spyReportStart: spyReportStart,
     setReactionScheduler: setReactionScheduler
 };
-var everything = {
-    Reaction: Reaction,
-    untracked: untracked,
-    Atom: Atom,
-    BaseAtom: BaseAtom,
-    useStrict: useStrict,
-    isStrictModeEnabled: isStrictModeEnabled,
-    spy: spy,
-    comparer: comparer,
-    asReference: asReference,
-    asFlat: asFlat,
-    asStructure: asStructure,
-    asMap: asMap,
-    isModifierDescriptor: isModifierDescriptor,
-    isObservableObject: isObservableObject,
-    isBoxedObservable: isObservableValue,
-    isObservableArray: isObservableArray,
-    ObservableMap: ObservableMap,
-    isObservableMap: isObservableMap,
-    map: map,
-    transaction: transaction,
-    observable: observable,
-    computed: computed,
-    isObservable: isObservable,
-    isComputed: isComputed,
-    extendObservable: extendObservable,
-    extendShallowObservable: extendShallowObservable,
-    observe: observe,
-    intercept: intercept,
-    autorun: autorun,
-    autorunAsync: autorunAsync,
-    when: when,
-    reaction: reaction,
-    action: action,
-    isAction: isAction,
-    runInAction: runInAction,
-    expr: expr,
-    toJS: toJS,
-    createTransformer: createTransformer,
-    whyRun: whyRun,
-    isArrayLike: isArrayLike,
-    extras: extras
-};
-var warnedAboutDefaultExport = false;
-var _loop_1 = function _loop_1(p) {
-    var val = everything[p];
-    Object.defineProperty(everything, p, {
-        get: function get() {
-            if (!warnedAboutDefaultExport) {
-                warnedAboutDefaultExport = true;
-                console.warn("Using default export (`import mobx from 'mobx'`) is deprecated " + "and won’t work in mobx@4.0.0\n" + "Use `import * as mobx from 'mobx'` instead");
-            }
-            return val;
-        }
-    });
-};
-for (var p in everything) {
-    _loop_1(p);
-}
+var _exports =  true ? exports : typeof module !== 'undefined' && typeof module.exports !== 'undefined' ? module.exports : {} /* what to do here, throw? */;
 if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "undefined" ? "undefined" : _typeof(__MOBX_DEVTOOLS_GLOBAL_HOOK__)) === "object") {
     __MOBX_DEVTOOLS_GLOBAL_HOOK__.injectMobx({ spy: spy, extras: extras });
 }
+// TODO: remove in 4.0, temporarily incompatibility fix for mobx-react@4.1.0 which accidentally uses default exports
+_exports['default'] = _exports;
 
 exports.extras = extras;
 exports.Reaction = Reaction;
@@ -3618,7 +3330,6 @@ exports.BaseAtom = BaseAtom;
 exports.useStrict = useStrict;
 exports.isStrictModeEnabled = isStrictModeEnabled;
 exports.spy = spy;
-exports.comparer = comparer;
 exports.asReference = asReference;
 exports.asFlat = asFlat;
 exports.asStructure = asStructure;
@@ -3632,6 +3343,7 @@ exports.isObservableMap = isObservableMap;
 exports.map = map;
 exports.transaction = transaction;
 exports.observable = observable;
+exports.IObservableFactories = IObservableFactories;
 exports.computed = computed;
 exports.isObservable = isObservable;
 exports.isComputed = isComputed;
@@ -3650,9 +3362,7 @@ exports.expr = expr;
 exports.toJS = toJS;
 exports.createTransformer = createTransformer;
 exports.whyRun = whyRun;
-exports.trace = trace;
 exports.isArrayLike = isArrayLike;
-exports.default = everything;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
@@ -3686,7 +3396,7 @@ function renderHeader(_ref, instance) {
     return reaction.content === 'heart' && reaction.user.login === user.login;
   });
   likeButton.className = 'gitment-header-like-btn';
-  likeButton.innerHTML = '\n    ' + _icons.heart + '\n    ' + (likedReaction ? 'Unlike' : 'Like') + '\n    ' + (meta.reactions && meta.reactions.heart ? ' \u2022 <strong>' + meta.reactions.heart + '</strong> Liked' : '') + '\n  ';
+  likeButton.innerHTML = '\n    ' + _icons.heart + '\n    ' + (likedReaction ? '取消喜欢' : '喜欢') + '\n    ' + (meta.reactions && meta.reactions.heart ? ' \u2022 <strong>' + meta.reactions.heart + '</strong> 人喜欢' : '') + '\n  ';
 
   if (likedReaction) {
     likeButton.classList.add('liked');
@@ -3702,14 +3412,14 @@ function renderHeader(_ref, instance) {
   container.appendChild(likeButton);
 
   var commentsCount = document.createElement('span');
-  commentsCount.innerHTML = '\n    ' + (meta.comments ? ' \u2022 <strong>' + meta.comments + '</strong> Comments' : '') + '\n  ';
+  commentsCount.innerHTML = '\n    ' + (meta.comments ? ' \u2022 <strong>' + meta.comments + '</strong> 条评论' : '') + '\n  ';
   container.appendChild(commentsCount);
 
   var issueLink = document.createElement('a');
   issueLink.className = 'gitment-header-issue-link';
   issueLink.href = meta.html_url;
   issueLink.target = '_blank';
-  issueLink.innerText = 'Issue Page';
+  issueLink.innerText = 'Issue页面';
   container.appendChild(issueLink);
 
   return container;
@@ -3752,14 +3462,14 @@ function renderComments(_ref2, instance) {
     return container;
   } else if (comments === undefined) {
     var loading = document.createElement('div');
-    loading.innerText = 'Loading comments...';
+    loading.innerText = '评论加载中...';
     loading.className = 'gitment-comments-loading';
     container.appendChild(loading);
     return container;
   } else if (!comments.length) {
     var emptyBlock = document.createElement('div');
     emptyBlock.className = 'gitment-comments-empty';
-    emptyBlock.innerText = 'No Comment Yet';
+    emptyBlock.innerText = '暂无评论';
     container.appendChild(emptyBlock);
     return container;
   }
@@ -3772,7 +3482,7 @@ function renderComments(_ref2, instance) {
     var updateDate = new Date(comment.updated_at);
     var commentItem = document.createElement('li');
     commentItem.className = 'gitment-comment';
-    commentItem.innerHTML = '\n      <a class="gitment-comment-avatar" href="' + comment.user.html_url + '" target="_blank">\n        <img class="gitment-comment-avatar-img" src="' + comment.user.avatar_url + '"/>\n      </a>\n      <div class="gitment-comment-main">\n        <div class="gitment-comment-header">\n          <a class="gitment-comment-name" href="' + comment.user.html_url + '" target="_blank">\n            ' + comment.user.login + '\n          </a>\n          commented on\n          <span title="' + createDate + '">' + createDate.toDateString() + '</span>\n          ' + (createDate.toString() !== updateDate.toString() ? ' \u2022 <span title="comment was edited at ' + updateDate + '">edited</span>' : '') + '\n          <div class="gitment-comment-like-btn">' + _icons.heart + ' ' + (comment.reactions.heart || '') + '</div>\n        </div>\n        <div class="gitment-comment-body gitment-markdown">' + comment.body_html + '</div>\n      </div>\n    ';
+    commentItem.innerHTML = '\n      <a class="gitment-comment-avatar" href="' + comment.user.html_url + '" target="_blank">\n        <img class="gitment-comment-avatar-img" src="' + comment.user.avatar_url + '"/>\n      </a>\n      <div class="gitment-comment-main">\n        <div class="gitment-comment-header">\n          <a class="gitment-comment-name" href="' + comment.user.html_url + '" target="_blank">\n            ' + comment.user.login + '\n          </a>\n          评论于\n          <span title="' + createDate + '">' + createDate.toDateString() + '</span>\n          ' + (createDate.toString() !== updateDate.toString() ? ' \u2022 <span title="comment was edited at ' + updateDate + '">已编辑</span>' : '') + '\n          <div class="gitment-comment-like-btn">' + _icons.heart + ' ' + (comment.reactions.heart || '') + '</div>\n        </div>\n        <div class="gitment-comment-body gitment-markdown">' + comment.body_html + '</div>\n      </div>\n    ';
     var likeButton = commentItem.querySelector('.gitment-comment-like-btn');
     var likedReaction = commentReactions[comment.id] && commentReactions[comment.id].find(function (reaction) {
       return reaction.content === 'heart' && reaction.user.login === user.login;
@@ -3799,7 +3509,7 @@ function renderComments(_ref2, instance) {
       if (markdownBody.clientHeight > instance.maxCommentHeight) {
         markdownBody.classList.add('gitment-comment-body-folded');
         markdownBody.style.maxHeight = instance.maxCommentHeight + 'px';
-        markdownBody.title = 'Click to Expand';
+        markdownBody.title = '点击展开';
         markdownBody.onclick = function () {
           markdownBody.classList.remove('gitment-comment-body-folded');
           markdownBody.style.maxHeight = '';
@@ -3872,8 +3582,8 @@ function renderEditor(_ref3, instance) {
   container.className = 'gitment-container gitment-editor-container';
 
   var shouldDisable = user.login && !error ? '' : 'disabled';
-  var disabledTip = user.login ? '' : 'Login to Comment';
-  container.innerHTML = '\n      ' + (user.login ? '<a class="gitment-editor-avatar" href="' + user.html_url + '" target="_blank">\n            <img class="gitment-editor-avatar-img" src="' + user.avatar_url + '"/>\n          </a>' : user.isLoggingIn ? '<div class="gitment-editor-avatar">' + _icons.spinner + '</div>' : '<a class="gitment-editor-avatar" href="' + instance.loginLink + '" title="login with GitHub">\n              ' + _icons.github + '\n            </a>') + '\n    </a>\n    <div class="gitment-editor-main">\n      <div class="gitment-editor-header">\n        <nav class="gitment-editor-tabs">\n          <button class="gitment-editor-tab gitment-selected">Write</button>\n          <button class="gitment-editor-tab">Preview</button>\n        </nav>\n        <div class="gitment-editor-login">\n          ' + (user.login ? '<a class="gitment-editor-logout-link">Logout</a>' : user.isLoggingIn ? 'Logging in...' : '<a class="gitment-editor-login-link" href="' + instance.loginLink + '">Login</a> with GitHub') + '\n        </div>\n      </div>\n      <div class="gitment-editor-body">\n        <div class="gitment-editor-write-field">\n          <textarea placeholder="Leave a comment" title="' + disabledTip + '" ' + shouldDisable + '></textarea>\n        </div>\n        <div class="gitment-editor-preview-field gitment-hidden">\n          <div class="gitment-editor-preview gitment-markdown"></div>\n        </div>\n      </div>\n    </div>\n    <div class="gitment-editor-footer">\n      <a class="gitment-editor-footer-tip" href="https://guides.github.com/features/mastering-markdown/" target="_blank">\n        Styling with Markdown is supported\n      </a>\n      <button class="gitment-editor-submit" title="' + disabledTip + '" ' + shouldDisable + '>Comment</button>\n    </div>\n  ';
+  var disabledTip = user.login ? '' : '登录即可评论';
+  container.innerHTML = '\n      ' + (user.login ? '<a class="gitment-editor-avatar" href="' + user.html_url + '" target="_blank">\n            <img class="gitment-editor-avatar-img" src="' + user.avatar_url + '"/>\n          </a>' : user.isLoggingIn ? '<div class="gitment-editor-avatar">' + _icons.spinner + '</div>' : '<a class="gitment-editor-avatar" href="' + instance.loginLink + '" title="login with GitHub">\n              ' + _icons.github + '\n            </a>') + '\n    </a>\n    <div class="gitment-editor-main">\n      <div class="gitment-editor-header">\n        <nav class="gitment-editor-tabs">\n          <button class="gitment-editor-tab gitment-selected">编辑</button>\n          <button class="gitment-editor-tab">预览</button>\n        </nav>\n        <div class="gitment-editor-login">\n          ' + (user.login ? '<a class="gitment-editor-logout-link">注销</a>' : user.isLoggingIn ? '正在登录...' : '<a class="gitment-editor-login-link" href="' + instance.loginLink + '">登录</a> Github') + '\n        </div>\n      </div>\n      <div class="gitment-editor-body">\n        <div class="gitment-editor-write-field">\n          <textarea placeholder="评论是博主最大的动力，来过就留点痕迹吧" title="' + disabledTip + '" ' + shouldDisable + '></textarea>\n        </div>\n        <div class="gitment-editor-preview-field gitment-hidden">\n          <div class="gitment-editor-preview gitment-markdown"></div>\n        </div>\n      </div>\n    </div>\n    <div class="gitment-editor-footer">\n      <a class="gitment-editor-footer-tip" href="https://guides.github.com/features/mastering-markdown/" target="_blank">\n        评论框支持 Markdown 语法\n      </a>\n      <button class="gitment-editor-submit" title="' + disabledTip + '" ' + shouldDisable + '>发表评论</button>\n    </div>\n  ';
   if (user.login) {
     container.querySelector('.gitment-editor-logout-link').onclick = function () {
       return instance.logout();
@@ -3917,11 +3627,11 @@ function renderEditor(_ref3, instance) {
     var preview = previewField.querySelector('.gitment-editor-preview');
     var content = textarea.value.trim();
     if (!content) {
-      preview.innerText = 'Nothing to preview';
+      preview.innerText = '无可预览内容';
       return;
     }
 
-    preview.innerText = 'Loading preview...';
+    preview.innerText = '加载预览中...';
     instance.markdown(content).then(function (html) {
       return preview.innerHTML = html;
     });
@@ -3929,17 +3639,17 @@ function renderEditor(_ref3, instance) {
 
   var submitButton = container.querySelector('.gitment-editor-submit');
   submitButton.onclick = function () {
-    submitButton.innerText = 'Submitting...';
+    submitButton.innerText = '发表中...';
     submitButton.setAttribute('disabled', true);
     instance.post(textarea.value.trim()).then(function (data) {
       textarea.value = '';
       textarea.style.height = 'auto';
       submitButton.removeAttribute('disabled');
-      submitButton.innerText = 'Comment';
+      submitButton.innerText = '发表评论';
     }).catch(function (e) {
       alert(e);
       submitButton.removeAttribute('disabled');
-      submitButton.innerText = 'Comment';
+      submitButton.innerText = '发表评论';
     });
   };
 

@@ -6,6 +6,7 @@
     {% set cs = theme.gitment.ClientSecret %}
     
     {% if id %}
+        <div id="gitment-container"></div>
         <link rel="stylesheet" href="{{ url_for(theme.css) }}/src/gitment.css">
         <script type="text/javascript" src="{{ url_for(theme.js) }}/src/gitment.browser.js"></script>
         {% if not theme.gitment.lazy %}
