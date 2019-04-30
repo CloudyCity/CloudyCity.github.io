@@ -9,3 +9,5 @@ Allow: /about/
 Disallow: /js/
 Disallow: /css/
 Disallow: /lib/
+
+Sitemap: https://cloudycity.me/sitemap.xml

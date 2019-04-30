@@ -13,8 +13,6 @@ timezone:
 # 站点地图
 sitemap:
   path: sitemap.xml
-baidusitemap:
-  path: baidusitemap.xml
 
 # 爬虫follow名单
 # nofollow:
@@ -31,6 +29,7 @@ neat_css:
   enable: true
   exclude:
     - '**/*.min.css'
+    - '**/needsharebutton.css'
 neat_js:
   enable: true
   mangle: true
