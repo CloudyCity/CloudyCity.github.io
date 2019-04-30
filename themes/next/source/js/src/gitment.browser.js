@@ -3509,7 +3509,7 @@ function renderComments(_ref2, instance) {
       if (markdownBody.clientHeight > instance.maxCommentHeight) {
         markdownBody.classList.add('gitment-comment-body-folded');
         markdownBody.style.maxHeight = instance.maxCommentHeight + 'px';
-        markdownBody.title = '点击展开';
+        markdownBody.title = 'Click to Expand';
         markdownBody.onclick = function () {
           markdownBody.classList.remove('gitment-comment-body-folded');
           markdownBody.style.maxHeight = '';
@@ -3534,7 +3534,7 @@ function renderComments(_ref2, instance) {
       if (currentPage > 1) {
         var previousButton = document.createElement('li');
         previousButton.className = 'gitment-comments-page-item';
-        previousButton.innerText = 'Previous';
+        previousButton.innerText = '上一页';
         previousButton.onclick = function () {
           return instance.goto(currentPage - 1);
         };
