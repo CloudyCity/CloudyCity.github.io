@@ -1,3 +1,4 @@
+{# 
 {%
   set js_commons = [
     'src/utils.js',
@@ -10,3 +11,4 @@
 {% endfor %}
 
 {% include './comments/gitment.swig' %}
+#}

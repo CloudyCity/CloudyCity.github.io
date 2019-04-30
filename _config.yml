@@ -26,12 +26,12 @@ neat_html:
   enable: true
   exclude:
 neat_css:
-  enable: true
+  enable: false
   exclude:
     - '**/*.min.css'
     - '**/needsharebutton.css'
 neat_js:
-  enable: true
+  enable: false
   mangle: true
   output:
   compress:
