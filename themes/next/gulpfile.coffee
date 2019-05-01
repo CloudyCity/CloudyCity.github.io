@@ -1,16 +1,15 @@
 fs = require('fs')
 path = require('path')
 gulp = require('gulp')
-jshint = require('gulp-jshint')
-jslish = require('jshint-stylish')
-stylint = require('gulp-stylint')
-stylish = require('stylint-stylish')
-shell = require('gulp-shell')
+jshint = require('gulp-jshint') # js语法检查
+jslish = require('jshint-stylish') # js语法检查输出美化
+stylint = require('gulp-stylint') # stylus语法检查
+stylish = require('stylint-stylish') # stylus语法检查输出美化
 yaml = require('js-yaml')
-concat = require('gulp-concat')
-uglify = require("gulp-uglify")
-concatCss = require('gulp-concat-css')
-cleanCss = require('gulp-clean-css')
+concat = require('gulp-concat') # js合并
+uglify = require("gulp-uglify") # js压缩
+concatCss = require('gulp-concat-css') # css合并
+cleanCss = require('gulp-clean-css') # css压缩
 
 # js语法检查 https://jshint.com/docs/options/
 gulp.task 'lint:js', ->
