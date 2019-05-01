@@ -14,12 +14,6 @@ timezone:
 sitemap:
   path: sitemap.xml
 
-# 爬虫follow名单
-# nofollow:
-#   enable: true
-#   exclude: # 例外链接
-#     - cloudycity.me
-
 # 博文压缩
 neat_enable: true
 neat_html:

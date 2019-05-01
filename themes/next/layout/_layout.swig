@@ -77,8 +77,8 @@
 
   </div>
 
-  <script type="text/javascript" src="{{ url_for(theme.js) }}/main.min.js?v={{ theme.version }}"></script>
   {% include '_scripts/vendors.swig' %}
+  <script type="text/javascript" src="{{ url_for(theme.js) }}/main.min.js?v={{ theme.version }}"></script>
   {% include '_scripts/commons.swig' %}
 
   {% set scheme_script = '_scripts/schemes/' + theme.scheme | lower + '.swig' %}

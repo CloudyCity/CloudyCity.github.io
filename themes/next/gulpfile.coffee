@@ -2,9 +2,9 @@ fs = require('fs')
 path = require('path')
 gulp = require('gulp')
 jshint = require('gulp-jshint')
-jsStylish = require('jshint-stylish')
+jslish = require('jshint-stylish')
 stylint = require('gulp-stylint')
-styStylish = require('stylint-stylish')
+stylish = require('stylint-stylish')
 shell = require('gulp-shell')
 yaml = require('js-yaml')
 concat = require('gulp-concat')
@@ -16,21 +16,13 @@ cleanCss = require('gulp-clean-css')
 gulp.task 'lint:js', ->
   return gulp.src path.join(__dirname, './source/js/**/*.js')
     .pipe jshint()
-    .pipe jshint.reporter(jsStylish)
+    .pipe jshint.reporter()
 
 # stylus语法检查 https://github.com/SimenB/stylint
 gulp.task 'lint:stylus', ->
   return gulp.src path.join(__dirname, '/source/css/**/*.styl')
-    .pipe stylint({
-      rules: {},
-      reporter: {
-        reporter: 'stylint-stylish',
-        reporterOptions: {
-          verbose: true
-        }
-      }
-    })
-    .pipe stylint.reporter(styStylish)
+    .pipe stylint({config: path.join(__dirname, '.stylintrc')})
+    .pipe stylint.reporter(stylish)
 
 # 配置文件检验
 gulp.task 'validate:config', (cb) ->
@@ -62,33 +54,33 @@ gulp.task 'validate:languages', (cb) ->
     cb(errors)
 
 # 合并压缩js
-gulp.task 'minify:js', ['lint:js'], (cb) ->
+# gulp.task 'minify:js', ['lint:js'], (cb) ->
+gulp.task 'minify:js', (cb) ->
   return gulp.src([
-    path.join(__dirname, 'source/js/src/bootstrap.js'),
-    path.join(__dirname, 'source/js/src/gitment.browser.js'),
-    path.join(__dirname, 'source/js/src/motion.js'),
-    path.join(__dirname, 'source/js/src/post-details.js'),
-    path.join(__dirname, 'source/js/src/scrollspy.js'),
     path.join(__dirname, 'source/js/src/utils.js'),
+    path.join(__dirname, 'source/js/src/motion.js'),
+    path.join(__dirname, 'source/js/src/gitment.browser.js'),
+    path.join(__dirname, 'source/js/src/bootstrap.js'),
+    path.join(__dirname, 'source/js/src/scrollspy.js'),
+    path.join(__dirname, 'source/js/src/post-details.js'),
   ]).pipe concat('main.min.js')
     .pipe uglify()
-    .pipe gulp.dest path.join __dirname, './source/js'
+    .pipe gulp.dest path.join __dirname, '../../public/js'
 
-    
 # 合并压缩js
-gulp.task 'minify:css', ['lint:stylus'], (cb) ->
+# gulp.task 'minify:css', ['lint:stylus'], (cb) ->
+gulp.task 'minify:css', (cb) ->
   return gulp.src([
-    path.join(__dirname, 'source/css/src/main.css'),
     path.join(__dirname, '../../public/css/main.css'),
+    path.join(__dirname, 'source/css/src/gitment.css'),
   ]).pipe concat('main.min.css')
     .pipe cleanCss()
     .pipe gulp.dest path.join __dirname, '../../public/css'
 
-console.log path.join(__dirname, '../../public/css')
-
+# 执行
 gulp.task 'default', [
-  # 'validate:config',
-  # 'validate:languages'
+  'validate:config',
+  'validate:languages'
   'minify:js',
-  'minify:css'
+  'minify:css',
 ]
