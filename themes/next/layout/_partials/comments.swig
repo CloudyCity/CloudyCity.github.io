@@ -1,4 +1,4 @@
-{% include './comments/gitment.swig' %}
+{# {% include './comments/gitment.swig' %} #}
 
 {% if page.comments %}
 
