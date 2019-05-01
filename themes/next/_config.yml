@@ -154,7 +154,7 @@ links_layout: block
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
 # in site  directory(source/uploads): /uploads/avatar.gif
-avatar: /images/avatar.gif
+avatar: /images/avatar.webp
 
 # Table Of Contents in the Sidebar
 toc:
@@ -243,8 +243,8 @@ post_wordcount:
 
 # Reward
 reward_comment: 
-wechatpay: /images/wechatpay.jpg
-alipay: /images/alipay.jpg
+# wechatpay: /images/wechatpay.jpg
+# alipay: /images/alipay.jpg
 #bitcoin: /images/bitcoin.png
 
 # Declare license on posts
