@@ -19,11 +19,11 @@ neat_enable: true
 neat_html:
   enable: true
   exclude:
+   - '**/*.md'
 neat_css:
   enable: false
   exclude:
     - '**/*.min.css'
-    - '**/needsharebutton.css'
 neat_js:
   enable: false
   mangle: true
@@ -31,9 +31,6 @@ neat_js:
   compress:
   exclude:
     - '**/*.min.js'
-    - '**/jquery.fancybox.pack.js'
-    - '**/index.js'
-    - '**/gitment*.js'
 
 # 懒加载
 lazyload:

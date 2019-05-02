@@ -64,7 +64,7 @@ gulp.task 'minify:js', (cb) ->
     path.join(__dirname, 'source/js/src/post-details.js'),
   ]).pipe concat('main.min.js')
     .pipe uglify()
-    .pipe gulp.dest path.join __dirname, '../../public/js'
+    .pipe gulp.dest(path.join __dirname, '../../public/js')
 
 # 合并压缩js
 # gulp.task 'minify:css', ['lint:stylus'], (cb) ->
@@ -74,7 +74,7 @@ gulp.task 'minify:css', (cb) ->
     path.join(__dirname, 'source/css/src/gitment.css'),
   ]).pipe concat('main.min.css')
     .pipe cleanCss()
-    .pipe gulp.dest path.join __dirname, '../../public/css'
+    .pipe gulp.dest(path.join __dirname, '../../public/css')
 
 # 执行
 gulp.task 'default', [

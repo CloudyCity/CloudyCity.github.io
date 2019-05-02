@@ -34,18 +34,8 @@
     "gulp-coffee": "^3.0.3",
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.1.0",
-    "gulp-htmlclean": "^2.7.22",
-    "gulp-htmlmin": "^5.0.1",
-    "gulp-jshint": "^2.1.0",
-    "gulp-jslint": "^1.0.10",
     "gulp-minify-css": "^1.2.4",
-    "gulp-plumber": "^1.2.1",
-    "gulp-shell": "^0.7.0",
     "gulp-stylint": "^4.0.2",
-    "gulp-uglify": "^3.0.2",
-    "hexo-util": "^0.6.3",
-    "jshint": "^2.10.2",
-    "jshint-stylish": "^2.2.1",
-    "stylint-stylish": "^2.0.0"
+    "gulp-uglify": "^3.0.2"
   }
 }
