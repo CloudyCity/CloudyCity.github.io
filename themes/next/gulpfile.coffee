@@ -1,10 +1,10 @@
 fs = require('fs')
 path = require('path')
 gulp = require('gulp')
-jshint = require('gulp-jshint') # js语法检查
-jslish = require('jshint-stylish') # js语法检查输出美化
-stylint = require('gulp-stylint') # stylus语法检查
-stylish = require('stylint-stylish') # stylus语法检查输出美化
+# jshint = require('gulp-jshint') # js语法检查
+# jslish = require('jshint-stylish') # js语法检查输出美化
+# stylint = require('gulp-stylint') # stylus语法检查
+# stylish = require('stylint-stylish') # stylus语法检查输出美化
 yaml = require('js-yaml')
 concat = require('gulp-concat') # js合并
 uglify = require("gulp-uglify") # js压缩
@@ -12,16 +12,16 @@ concatCss = require('gulp-concat-css') # css合并
 cleanCss = require('gulp-clean-css') # css压缩
 
 # js语法检查 https://jshint.com/docs/options/
-gulp.task 'lint:js', ->
-  return gulp.src path.join(__dirname, './source/js/**/*.js')
-    .pipe jshint()
-    .pipe jshint.reporter()
+# gulp.task 'lint:js', ->
+#   return gulp.src path.join(__dirname, './source/js/**/*.js')
+#     .pipe jshint()
+#     .pipe jshint.reporter()
 
 # stylus语法检查 https://github.com/SimenB/stylint
-gulp.task 'lint:stylus', ->
-  return gulp.src path.join(__dirname, '/source/css/**/*.styl')
-    .pipe stylint({config: path.join(__dirname, '.stylintrc')})
-    .pipe stylint.reporter(stylish)
+# gulp.task 'lint:stylus', ->
+#   return gulp.src path.join(__dirname, '/source/css/**/*.styl')
+#     .pipe stylint({config: path.join(__dirname, '.stylintrc')})
+#     .pipe stylint.reporter(stylish)
 
 # 配置文件检验
 gulp.task 'validate:config', (cb) ->
