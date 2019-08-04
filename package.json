@@ -8,7 +8,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "sh test.sh",
-    "build": "sh deploy.sh"
+    "build": "sh deploy.sh",
+    "init": "sh init.sh"
   },
   "dependencies": {
     "gitment": "0.0.3",
