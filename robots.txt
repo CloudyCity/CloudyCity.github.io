@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /p/
+Allow: /archives/
+Allow: /tags/
+Allow: /categories/
+Allow: /about/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /lib/
+
+Sitemap: https://cloudycity.me/sitemap.xml
