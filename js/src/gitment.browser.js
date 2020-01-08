@@ -3957,7 +3957,7 @@ var Gitment = function () {
       }, options);
 
       this.state.user.isLoggingIn = true;
-      _utils.http.post('https://cors.zme.ink/https://github.com/login/oauth/access_token', {
+      _utils.http.post('https://gh-oauth.imsun.net/', {
         code: code,
         client_id: client_id,
         client_secret: client_secret
