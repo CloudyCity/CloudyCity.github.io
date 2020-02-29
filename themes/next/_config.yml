@@ -296,7 +296,7 @@ font:
   enable: false
 
   # Uri of fonts host. E.g. //fonts.googleapis.com (Default).
-  host:
+  host: //fonts.proxy.ustclug.org
 
   # Font options:
   # `external: true` will load this font family from `host` above.
@@ -406,7 +406,7 @@ gitment:
     repo: CloudyCity.github.io
     # https://cloudycity.me 对应的授权应用
     ClientID: dadefc2d3c8db1edad2f
-    ClientSecret: 60c0747b614beb617dc766c8faf6a43486713ea3
+    ClientSecret: 88b74eaac0c6e004b70cbc55b2c08802bb7e5bf6
     # https://CloudyCity.github.io 对应的授权应用
     #ClientID: 4304b7f4fa32ac454301
     #ClientSecret: e8b72b9942f12da088f33fac5a520156430fed33
