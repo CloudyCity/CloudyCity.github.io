@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Eloquent自动维护int类型的时间]]></title>
+    <url>%2Fp%2Fea6c.html</url>
+    <content type="text"><![CDATA[火星救援，刻不容缓！ Laravel Eloquent提供了自动维护created_at、updated_at的功能，时间的默认类型为格式化的字符串(Carbon\Carbon::toString()的返回值)。如果表设计是存储Unix时间戳，可以通过一个trait支持。 12345678910111213141516namespace App\Models;trait UseUnixTimestamp&#123; public function freshTimestamp() &#123; return time(); &#125; public function fromDateTime($value) &#123; return $value; &#125; public function getDateFormat() &#123; return 'U'; &#125;&#125; 12345678910namespace App\Models;use UseUnixTimestamp;class MyModel extends Model&#123; use UseUnixTimestamp; //&#125;]]></content>
+      <categories>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[如何引用同一级查询的列别名作为新列]]></title>
     <url>%2Fp%2F1ff4.html</url>
     <content type="text"><![CDATA[火星救援，刻不容缓！示例表：12345678mysql&gt; SELECT * FROM core;+--------+--------+--------+| field1 | field2 | field3 |+--------+--------+--------+| 1 | 2 | 3 || 4 | 5 | 6 |+--------+--------+--------+2 rows in set (0.00 sec) MySQL中无法直接执行以下查询：123456mysql&gt; SELECT -&gt; field1 + field2 AS col1, -&gt; col1 + field3 AS col2 -&gt; FROM -&gt; core;ERROR 1054 (42S22): Unknown column 'col1' in 'field list' 但有三种方案实现这个效果。 子查询123456789101112mysql&gt; SELECT -&gt; col1, -&gt; col1 + field3 AS col2 -&gt; FROM -&gt; ( SELECT field1 + field2 AS col1, field3 FROM core ) AS subQuery;+------+------+| col1 | col2 |+------+------+| 3 | 6 || 9 | 15 |+------+------+2 rows in set (0.00 sec) 用户变量123456789101112mysql&gt; SELECT -&gt; @col1 := ( field1 + field2 ) AS col1, -&gt; @col1 + field3 AS col2 -&gt; FROM -&gt; core;+------+------+| col1 | col2 |+------+------+| 3 | 6 || 9 | 15 |+------+------+2 rows in set, 1 warning (0.00 sec) 这里结果显示了一个warning: SELECT里的表达式在被发送到mysql客户端时才会被执行，所以用户变量在HAVING、GROUP BY、ORDER BY中无法使用。 引用别名123456789101112mysql&gt; SELECT -&gt; field1 + field2 AS col1, -&gt; ( SELECT col1 ) + field3 AS col2 -&gt; FROM -&gt; core;+------+------+| col1 | col2 |+------+------+| 3 | 6 || 9 | 15 |+------+------+2 rows in set (0.00 sec) 与用户变量类似，在GROUP BY中无法使用。 在GROUP BY里中使用引用:12345678mysql&gt; SELECT -&gt; MAX( field1 ) AS col1, -&gt; ( SELECT col1 ) AS col2 -&gt; FROM -&gt; core -&gt; GROUP BY -&gt; field1;ERROR 1247 (42S22): Reference 'col1' not supported (reference to group function) Referenceshttps://stackoverflow.com/questions/6081436/how-to-alias-a-field-or-column-in-mysql#]]></content>
