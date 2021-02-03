@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "hexo": {
-    "version": "3.8.0"
+    "version": "3.9.0"
   },
   "scripts": {
     "start": "npm run dev",
-    "migrate": "hexo migrate github-issue CloudyCity/CloudyCity.github.io",
-    "dev": "hexo clean && npm run migrate && hexo g && gulp && hexo s",
-    "build": "hexo clean && npm run migrate && hexo g && gulp && hexo d",
+    "migrate": "node_modules/hexo/bin/hexo migrate github-issue CloudyCity/CloudyCity.github.io",
+    "dev": "node_modules/hexo/bin/hexo clean && npm run migrate && node_modules/hexo/bin/hexo g && gulp && node_modules/hexo/bin/hexo s",
+    "build": "node_modules/hexo/bin/hexo clean && npm run migrate && node_modules/hexo/bin/hexo g && gulp && node_modules/hexo/bin/hexo d",
     "init": "npm install && sh gitment.sh"
   },
   "dependencies": {
