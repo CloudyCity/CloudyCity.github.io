@@ -1,6 +1,10 @@
 
 # CloudyCity's Hexo Blog
 
+## Requirement
+
+Node.js v11
+
 ## Installation
 
 ```bash
@@ -12,9 +16,9 @@ npm run init
 
 ### write
 
-open a new issue
+Open a new issue and write content.
 
-### Generate
+### Generate & Server
 
 ```bash
 npm start
@@ -23,5 +27,5 @@ npm start
 ### Deploy
 
 ```bash
-npm run build
+npm run deploy
 ```
