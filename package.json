@@ -7,13 +7,11 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "migrate": "npm run hexo migrate github-issue CloudyCity/CloudyCity.github.io",
-    "build": "npm run hexo clean && npm run migrate && npm run hexo g && npm run gulp",
-    "dev": "npm run build && npm run hexo s",
-    "deploy": "npm run build && npm run hexo d",
-    "init": "npm install && sh gitment.sh",
-    "gulp": "node_modules/.bin/gulp",
-    "hexo": "node_modules/hexo/bin/hexo"
+    "migrate": "npx hexo migrate github-issue CloudyCity/CloudyCity.github.io",
+    "build": "npx hexo clean && npm run migrate && npx hexo g && npx gulp",
+    "dev": "npm run build && npx hexo s",
+    "deploy": "npm run build && npx hexo d",
+    "init": "npm install && sh gitment.sh"
   },
   "dependencies": {
     "gitment": "0.0.3",
