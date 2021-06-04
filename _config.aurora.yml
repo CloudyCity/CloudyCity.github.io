@@ -1,0 +1,340 @@
+#! ---------------------------------------------------------------
+#! Aurora Theme for Hexo
+#! ---------------------------------------------------------------
+#! Designed & Coded By TriDiamond
+#! ---------------------------------------------------------------
+
+#! ---------------------------------------------------------------
+#! Site Configs
+#！ @docs https://aurora.tridiamond.tech/guide/configuration.html
+#! ---------------------------------------------------------------
+site:
+  subtitle: CloudyCity's Blog
+  author: CloudyCity
+  nick: 刀疤城
+  description: 拖延并发强迫症懒癌晚期患者
+  link: '/'
+  language: cn
+  multi_language: true
+  logo: https://avatars.githubusercontent.com/u/17662451?s=400&u=643d94296b79c5e8424a2177fc4609a5e0ebeae0&v=4
+  avatar: https://avatars.githubusercontent.com/u/17662451?s=400&u=643d94296b79c5e8424a2177fc4609a5e0ebeae0&v=4
+  beian:
+    number: ''
+    link: ''
+  police_beian:
+    number: ''
+    link: ''
+
+#! ---------------------------------------------------------------
+#! Authors Configs
+#！ @docs https://aurora.tridiamond.tech/guide/authors.html
+#! ---------------------------------------------------------------
+authors:
+  ##! example
+  # TriDiamond:
+  #   name: TriDiamond
+  #   avatar: https://up.enterdesk.com/edpic_source/44/ff/3d/44ff3d6bd2819d524facfcc33205d4cd.jpg
+  #   link: https://github.com/TriDiamond
+  #   description: 'Think like an artist, code like an artisan.'
+  #   socials:
+  #     github: https://tridiamond.tech
+
+#! ---------------------------------------------------------------
+#! Menu Configs
+#！ @docs https://aurora.tridiamond.tech/guide/menu.html
+#! ---------------------------------------------------------------
+menu:
+  About: true
+  Tags: true
+  Archives: true
+
+#! ---------------------------------------------------------------
+#! Theme Config
+#! @docs https://aurora.tridiamond.tech/guide/theme.html
+#! ---------------------------------------------------------------
+theme:
+  dark_mode: true
+  profile_shape: rounded # support `circle`, `diamond`, `rounded`
+  feature: true
+  gradient:
+    color_1: '#24c6dc'
+    color_2: '#5433ff'
+    color_3: '#ff0099'
+
+#! ---------------------------------------------------------------
+#! Social Configs
+#! @docs https://aurora.tridiamond.tech/guide/social.html
+#! ---------------------------------------------------------------
+socials:
+  github: 'https://github.com/CloudyCity'
+  stackoverflow: 'https://stackoverflow.com/users/9827779/cloudycity'
+  customs:
+  ##! Example:
+  ##! --- Using SVG
+    bilibili:
+      icon: /svg/bilibili.svg
+      link: https://b23.tv/MK4nKb
+
+    steam:
+      icon: /svg/steam.svg
+      link: https://steamcommunity.com/id/cloudycity
+
+  ##! --- Using IconFont
+  # baidu:
+  #   icon: iconfont icon-baidu
+  #   link: https://live.bilibili.com/22619211
+
+  ##! --- Using FontAwesome
+  # book:
+  #   icon: far fa-address-book
+  #   link: https://live.bilibili.com/22619211
+
+#! ---------------------------------------------------------------
+#! Site Meta Configs
+#! @docs https://aurora.tridiamond.tech/guide/theme.html
+#! ---------------------------------------------------------------
+site_meta:
+  cdn: cn
+  favicon:
+  description: '拖延并发强迫症懒癌晚期患者'
+  keywords: 'CloudyCity'
+  author: 'CloudyCity'
+
+#! ---------------------------------------------------------------
+#! Plugins
+#! @docs https://aurora.tridiamond.tech/guide/plugins.html
+#! ---------------------------------------------------------------
+
+# For local development only!
+gitalk:
+  enable: true
+  autoExpand: true
+  clientID: '8ff5f08baec620c1a3e1'
+  clientSecret: 'ab7ae32d4e4dc653bff01f54d740d4b2d68a7fdc'
+  repo: 'GitalkComments'
+  owner: 'CloudyCity'
+  admin: ['CloudyCity']
+  id: uid
+  language: en
+  distractionFreeMode: true
+  recentComment: true
+  proxy: ''
+
+# Valine comment plugin (recommended!)
+# see https://valine.js.org/quickstart.html
+valine:
+  enable: false
+  app_id:
+  app_key:
+  avatar: ''
+  placeholder: Leave your thoughts behind~
+  visitor: true
+  lang: en
+  avatarForce: false
+  meta: ['nick', 'mail']
+  requiredFields: []
+  admin: 'CloudyCity'
+  recentComment: false
+
+# Enable Busuanzi statistic plugin
+# see http://ibruce.info/2015/04/04/busuanzi/
+busuanzi:
+  enable: true
+
+copy_protection:
+  enable: false
+  author:
+    cn: 作者
+    en: Author
+  link:
+    cn: 本文来自于
+    en: Article is from
+  license:
+    cn: 博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议
+    en: This content is shared under the CC BY-NC-SA 4.0 protocol (Non-Commercial)
+
+#! ---------------------------------------------------------------
+#! Enable Aurora Bot Dia
+#! @docs https://aurora.tridiamond.tech/guide/site-meta.html#custom-meta
+#! ---------------------------------------------------------------
+aurora_bot:
+  enable: true
+  locale: cn
+  bot_type: dia
+  tips:
+    # ======================================================
+    # 这些是 Dia 每30秒会说的随机消息。
+    # ======================================================
+    messages: 
+      - showQuote
+
+    # ======================================================
+    # 将在用户打开浏览器控制台时触发。
+    # ======================================================
+    console: 哦豁，开控制台了？
+
+    # ======================================================
+    # 当用户从你的博客上复制内容时触发。
+    # ======================================================
+    copy: 不客气！
+
+    # ======================================================
+    # 这将在用户返回窗口时触发。
+    # ======================================================
+    visibility_change: 欢迎回来～
+
+    # ======================================================
+    # 欢迎留言，号码是一天中的时间。
+    # -----------------------------------
+    # eg: 24 = 00:00 也就是午夜
+    # eg: 17-19 = 在下午 5 点到 7 点之间
+    # -----------------------------------
+    # 在一天的这段时间里，Dia 会向你的读者问好
+    # 与相应的消息。
+    # ======================================================
+    welcome:
+      '24': 还不睡？
+      '5_7': 够早噢！
+      '7_11': 冲啊！打工人！
+      '11_13': 中午不睡，下午崩溃。
+      '13_17': 3点几嘞！饮茶先嘞！
+      '17_19': 溜了！打工人！
+      '19_21': 恰晚饭了吗？
+      '21_23': 现在是打游戏时间，你在加班？
+
+    # ======================================================
+    # 当用户来自搜索引擎时使用。
+    # ======================================================
+    referrer:
+      # 用户来自你自己的网站。
+      self: 欢迎来到<span>「[PLACEHOLDER]」</span>
+      # 用户来自百度搜索引擎。
+      baidu: Hello！来自 百度搜索 的朋友<br>你是搜索 <span>「[PLACEHOLDER]」</span> 找到的我吗？
+      # 用户来自360搜索引擎。
+      so: Hello！来自 360搜索 的朋友<br>你是搜索 <span>「[PLACEHOLDER]」</span> 找到的我吗？
+      # 用户来自谷歌搜索引擎。
+      google: Hello！来自 谷歌搜索 的朋友<br>欢迎阅读<span>「[PLACEHOLDER]」</span>
+      # 用户来自另一个网站。
+      site: Hello！来自 <span>[PLACEHOLDER]</span> 的朋友
+      # 任何其他来源。
+      other: 感谢您阅读： <span>「[PLACEHOLDER]」</span>
+
+    # ======================================================
+    # 当你的'鼠标悬停'到特定的HTML标签，Dia将
+    # 给用户留言帮助他们解决问题。
+    # ------------------------------------------------------
+    # selector: 标签选择器(你可以使用任何css选择器)
+    # text: 这是Dia将要传达的信息。(如果你想要的
+    #       Dia从一组信息中随机说出一个，设置它
+    #       数组，否则只是纯文本)
+    #  ======================================================
+    mouseover:
+      # 悬浮在 Dia 上
+      - selector: '#Aurora-Dia'
+        text:
+          - Sup?
+          - Homie!
+      # 悬浮在 Home 菜单
+      - selector: "[data-menu='Home']"
+        text:
+          - 点击使用回城卷轴。
+      # 悬浮在 About 菜单
+      - selector: "[data-menu='About']"
+        text:
+          - 还有人想了解博主这个捞头？
+      # 悬浮在 Archives 菜单
+      - selector: "[data-menu='Archives']"
+        text:
+          - 这些是捞头写过的所有东西。
+      # 悬浮在 Tags 菜单
+      - selector: "[data-menu='Tags']"
+        text:
+          - 就是分类。
+      # 悬浮在 language 菜单
+      - selector: "[data-dia='language']"
+        text: 
+          - 装逼少不了i18n。
+      # 悬浮在黑白切换按钮上
+      - selector: "[data-dia='light-switch']"
+        text: 
+          - 深色才是正义！
+          - 晚上禁止使用浅色！
+      # 悬浮在作者简介上
+      - selector: "[data-dia='author']"
+        text:
+          - 这是捞头。
+      # 悬浮在作跳转评论按钮上
+      - selector: "[data-dia='jump-to-comment']"
+        text:
+          - 不吹不黑（五毛一条，括号内删除
+
+    # ======================================================
+    # 当你的'鼠标点击'为特定的HTML标签，Dia将
+    # 给用户留言帮助他们解决问题。
+    # ------------------------------------------------------
+    # 属性与' moveover '事件相同
+    # ======================================================
+    click:
+      # 鼠标点击搜索按钮
+      - selector: "[data-dia='search']"
+        text:
+          - Power by Elasticsearch！（雾
+          - 可以使用 ctrl/cmd + k 快捷键打开搜索哦～
+      # 鼠标点击文章标题
+      - selector: "[data-dia='article-link']"
+        text:
+          - 这写的什么呢？
+      # 鼠标点击跳转评论输入框（Gitalk）
+      - selector: '.gt-header-textarea'
+        text:
+          - 要吐槽些什么呢？
+          - 一定要认真填写喵～
+          - 有什么想说的吗？
+          - 如果觉得文章不错的话，就给博主留个言吧～
+      # 鼠标点击跳转评论输入框（Valine）
+      - selector: '.veditor'
+        text:
+          - 要吐槽些什么呢？
+          - 一定要认真填写喵～
+          - 有什么想说的吗？
+          - 如果觉得文章不错的话，就给博主留个言吧～
+
+    # ======================================================
+    # 在特定的日期，Dia会向你的读者问候。
+    # ------------------------------------------------------
+    # date: 特别活动的日期(格式:月/日或月/日-月/日)
+    # text:
+    # ---只使用一个简单的字符串。
+    # -——消息的随机集合，使用数组配置格式。
+    # ======================================================
+    events:
+      - date: 01/01
+        text: '<span>元旦</span>了呢，新的一年又开始了，今年是{year}年～'
+      - date: 02/14
+        text: 又是一年<span>情人节</span>，{year}年找到对象了嘛～
+      - date: 03/08
+        text: 今天是<span>国际妇女节</span>！
+      - date: 03/12
+        text: 今天是<span>植树节</span>，要保护环境呀！
+      - date: 04/01
+        text: 悄悄告诉你一个秘密～<span>今天是愚人节，不要被骗了哦～</span>
+      - date: 05/01
+        text: 今天是<span>五一劳动节</span>，计划好假期去哪里了吗～
+      - date: 06/01
+        text: '<span>儿童节</span>了呢，快活的时光总是短暂，要是永远长不大该多好啊…'
+      - date: '09/03'
+        text: '<span>中国人民抗日战争胜利纪念日</span>，铭记历史、缅怀先烈、珍爱和平、开创未来。'
+      - date: '09/10'
+        text: '<span>教师节</span>，在学校要给老师问声好呀～'
+      - date: 10/01
+        text: '<span>国庆节</span>到了，为祖国母亲庆生！'
+      - date: 11/05-11/12
+        text: 今年的<span>双十一</span>是和谁一起过的呢～
+
+#! ---------------------------------------------------------------
+#! Injections
+#! @docs https://aurora.tridiamond.tech/guide/site-meta.html#custom-meta
+#! ---------------------------------------------------------------
+injects:
+  scripts:
+  css:
