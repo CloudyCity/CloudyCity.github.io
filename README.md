@@ -9,7 +9,7 @@ Node.js v11
 
 ```bash
 git clone git@github.com:CloudyCity/CloudyCity.github.io.git
-npm run init
+npm install
 ```
 
 ## Usage

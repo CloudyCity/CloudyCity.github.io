@@ -14,40 +14,11 @@ timezone:
 sitemap:
   path: sitemap.xml
 
-# 博文压缩
-neat_enable: true
-neat_html:
-  enable: true
-  exclude:
-   - '**/*.md'
-neat_css:
-  enable: false
-  exclude:
-    - '**/*.min.css'
-neat_js:
-  enable: false
-  mangle: true
-  output:
-  compress:
-  exclude:
-    - '**/*.min.js'
-
-# 懒加载
-lazyload:
-  enable: true 
-  onlypost: true
-  loadingImg: /images/loading/loading_1.gif #如果不填写图片则使用默认的图片
-
-# abbrlink 固定短链接
-abbrlink:
-  alg: crc16  #support crc16(default) and crc32
-  rep: hex    #support dec(default) and hex
-  
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://cloudycity.me
 root: /
-permalink: p/:abbrlink.html 
+permalink: /post/:title.html
 permalink_defaults:
 
 # Directory
@@ -64,17 +35,23 @@ skip_render: README.md
 new_post_name: :title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
 relative_link: false
 future: true
 highlight:
-  enable: true
+  enable: false
   line_number: true
   auto_detect: false
-  tab_replace:
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: true
+  preprocess: true
+  line_number: true
+  tab_replace: ''
   
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -105,7 +82,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: aurora
 plugins: hexo-generate-feed
 
 # Deployment
