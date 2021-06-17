@@ -111,7 +111,7 @@ gitalk:
   autoExpand: true
   clientID: '8ff5f08baec620c1a3e1'
   clientSecret: 'ab7ae32d4e4dc653bff01f54d740d4b2d68a7fdc'
-  repo: 'GitalkComments'
+  repo: 'gitalk-comments'
   owner: 'CloudyCity'
   admin: ['CloudyCity']
   id: uid
