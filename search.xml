@@ -1,6 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Laravel使用RequestID的简易方案</title>
+    <url>//post/Laravel%E4%BD%BF%E7%94%A8RequestID%E7%9A%84%E7%AE%80%E6%98%93%E6%96%B9%E6%A1%88.html</url>
+    <content><![CDATA[<p>一些大型Web系统通常会给请求分配一个UUID，便于追踪定位线上的问题。</p>
+<p>这部分的功能可以细分为：</p>
+<ul>
+<li>分配UUID</li>
+<li>存储请求</li>
+<li>检索请求</li>
+</ul>
+<h2 id="分配UUID"><a href="#分配UUID" class="headerlink" title="分配UUID"></a>分配UUID</h2><p>这部分比较简单，写个中间件并注册即可：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">namespace</span> <span class="token package">App<span class="token punctuation">\</span>Http<span class="token punctuation">\</span>Middleware</span><span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Http<span class="token punctuation">\</span>JsonResponse</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Http<span class="token punctuation">\</span>Request</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Http<span class="token punctuation">\</span>Response</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Laravel<span class="token punctuation">\</span>Telescope<span class="token punctuation">\</span>Watchers<span class="token punctuation">\</span>RequestWatcher</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Ramsey<span class="token punctuation">\</span>Uuid<span class="token punctuation">\</span>Uuid</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">AppendRequestId</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">/**
+     * 为请求分配一个ID
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \Closure $next
+     * @return mixed
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name type-declaration">Request</span> <span class="token variable">$request</span><span class="token punctuation">,</span> <span class="token class-name class-name-fully-qualified type-declaration"><span class="token punctuation">\</span>Closure</span> <span class="token variable">$next</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token variable">$uuid</span> <span class="token operator">=</span> <span class="token class-name static-context">Uuid</span><span class="token operator">::</span><span class="token function">uuid6</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token variable">$request</span><span class="token operator">-></span><span class="token property">headers</span><span class="token operator">-></span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'X-Request-ID'</span><span class="token punctuation">,</span> <span class="token variable">$uuid</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">/** @var Response $response */</span>
+        <span class="token variable">$response</span> <span class="token operator">=</span> <span class="token variable">$next</span><span class="token punctuation">(</span><span class="token variable">$request</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token variable">$response</span><span class="token operator">-></span><span class="token property">headers</span><span class="token operator">-></span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'X-Request-ID'</span><span class="token punctuation">,</span> <span class="token variable">$uuid</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$response</span> <span class="token keyword">instanceof</span> <span class="token class-name">JsonResponse</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token variable">$response</span><span class="token operator">-></span><span class="token function">setData</span><span class="token punctuation">(</span><span class="token function">tap</span><span class="token punctuation">(</span><span class="token variable">$response</span><span class="token operator">-></span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$data</span><span class="token punctuation">)</span> <span class="token keyword">use</span> <span class="token punctuation">(</span><span class="token variable">$uuid</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token variable">$data</span><span class="token operator">-></span><span class="token property">request_id</span> <span class="token operator">=</span> <span class="token variable">$uuid</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token keyword">return</span> <span class="token variable">$response</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://user-images.githubusercontent.com/17662451/122746335-7d220c00-d2bc-11eb-9e00-0e6830f463f1.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/17662451/122746428-9460f980-d2bc-11eb-90e2-b6abc87b0ec7.png" alt="image"></p>
+<h2 id="存储请求"><a href="#存储请求" class="headerlink" title="存储请求"></a>存储请求</h2><p>这里推荐 Laravel 官方组件 <a href="https://laravel.com/docs/master/telescope">Telescope</a> , 安装过程见官方文档。</p>
+<div class="custom-quote warning">
+<span class="custom-quote-svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg" data-reactroot="">
+<path fill="" d="M20.86 14.13C20 14.7 19.56 15.74 19.77 16.76C20.13 18.55 18.55 20.13 16.76 19.77C15.74 19.57 14.7 20 14.13 20.86C13.12 22.38 10.89 22.38 9.88 20.86C9.3 20 8.26 19.56 7.24 19.77C5.45 20.13 3.87 18.55 4.23 16.76C4.43 15.74 4 14.7 3.14 14.13C1.62 13.12 1.62 10.89 3.14 9.88C4 9.3 4.44 8.26 4.23 7.24C3.87 5.45 5.45 3.87 7.24 4.23C8.26 4.44 9.3 4 9.87 3.14C10.88 1.62 13.11 1.62 14.12 3.14C14.7 4 15.74 4.44 16.76 4.23C18.55 3.87 20.13 5.45 19.77 7.24C19.56 8.26 20 9.3 20.86 9.87C22.38 10.88 22.38 13.12 20.86 14.13Z" undefined="1"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" stroke="" d="M12 8V13"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" stroke="" d="M12 15.99V16.01"></path>
+</svg>
+</span>
+<p class="custom-quote-title">注意</p>
+<p><code>Telescope</code>会对服务器性能有一些影响，不过你可以通过<code>.env</code>管理<code>Watcher</code>，确保线上只开启必要的<code>Watcher</code>，可以减少影响。</p>
+</div>
+<p><code>Telescope</code>使用<code>Tag</code>进行检索，所以我们需要把上面生成的UUID保存到<code>Tag</code>中。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">namespace</span> <span class="token package">App<span class="token punctuation">\</span>Providers</span><span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Models<span class="token punctuation">\</span>System<span class="token punctuation">\</span>Admin</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Support<span class="token punctuation">\</span>Facades<span class="token punctuation">\</span>Gate</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Laravel<span class="token punctuation">\</span>Telescope<span class="token punctuation">\</span>IncomingEntry</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Laravel<span class="token punctuation">\</span>Telescope<span class="token punctuation">\</span>Telescope</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Laravel<span class="token punctuation">\</span>Telescope<span class="token punctuation">\</span>TelescopeApplicationServiceProvider</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">TelescopeServiceProvider</span> <span class="token keyword">extends</span> <span class="token class-name">TelescopeApplicationServiceProvider</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">/**
+     * Register any application services.
+     *
+     * @return void
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token comment">// ...</span>
+
+        <span class="token class-name static-context">Telescope</span><span class="token operator">::</span><span class="token function">tag</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token class-name type-declaration">IncomingEntry</span> <span class="token variable">$entry</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$entry</span><span class="token operator">-></span><span class="token property">type</span> <span class="token operator">===</span> <span class="token string single-quoted-string">'request'</span> <span class="token operator">&amp;&amp;</span> <span class="token variable">$requestId</span> <span class="token operator">=</span> <span class="token function">request</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token property">headers</span><span class="token operator">-></span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'x-request-id'</span><span class="token punctuation">,</span> <span class="token constant">null</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token variable">$requestId</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// ...</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="检索请求"><a href="#检索请求" class="headerlink" title="检索请求"></a>检索请求</h2><p><img src="https://user-images.githubusercontent.com/17662451/122746633-ca05e280-d2bc-11eb-894e-b2b34df5628c.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/17662451/122747104-3da7ef80-d2bd-11eb-8a65-f15c61a0ee67.png" alt="image"></p>
+<div class="custom-quote tip">
+<span class="custom-quote-svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg" data-reactroot="">
+<path fill="" d="M20.86 14.13C20 14.7 19.56 15.74 19.77 16.76C20.13 18.55 18.55 20.13 16.76 19.77C15.74 19.57 14.7 20 14.13 20.86C13.12 22.38 10.89 22.38 9.88 20.86C9.3 20 8.26 19.56 7.24 19.77C5.45 20.13 3.87 18.55 4.23 16.76C4.43 15.74 4 14.7 3.14 14.13C1.62 13.12 1.62 10.89 3.14 9.88C4 9.3 4.44 8.26 4.23 7.24C3.87 5.45 5.45 3.87 7.24 4.23C8.26 4.44 9.3 4 9.87 3.14C10.88 1.62 13.11 1.62 14.12 3.14C14.7 4 15.74 4.44 16.76 4.23C18.55 3.87 20.13 5.45 19.77 7.24C19.56 8.26 20 9.3 20.86 9.87C22.38 10.88 22.38 13.12 20.86 14.13Z" undefined="1"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" stroke="" d="M12.01 15C12.01 14.5 12.01 14.5 12.01 14.5C12.04 13.75 13 13.46 14.04 12.2C14.41 11.74 14.69 11.41 14.86 10.85C15.15 9.95 14.92 9.18 14.86 9.02C14.8 8.79 14.52 8 13.72 7.46C13.06 7.02 12.42 7 12.14 7C11.9 7 11.36 7 10.78 7.3C10.28 7.56 9.98 7.9 9.83 8.1C9.24 8.82 9.06 9.63 9 10.06"></path>
+<path stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" stroke="" d="M11.99 18H12.01"></path>
+</svg></span>
+<p class="custom-quote-title">提示</p>
+<p>细心的朋友可能会发现<code>Telescope</code>本身有UUID，那直接用这个作为请求ID岂不美哉？可惜的是，这个UUID在发送响应给客户端之后才产生的，没办法利用起来，参考 <a href="https://github.com/laravel/telescope/issues/451">Issue</a>。</p>
+</div>
+]]></content>
+      <categories>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>GitLab CI/CD简单实践</title>
     <url>//post/GitLab-CI-CD%E7%AE%80%E5%8D%95%E5%AE%9E%E8%B7%B5.html</url>
     <content><![CDATA[<p>针对一个前端项目仓库，使用简单、低成本的方式进行CI/CD。</p>
