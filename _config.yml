@@ -91,4 +91,5 @@ deploy:
   type: git
   repo: 
     github: git@github.com:CloudyCity/CloudyCity.github.io.git
+    gitee: git@gitee.com:CloudyCity/CloudyCity.git
   branch: master
