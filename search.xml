@@ -1941,7 +1941,7 @@ git_data_dirs<span class="token punctuation">(</span><span class="token punctuat
                 <span class="token operator">||</span>----w <span class="token operator">|</span>
                 <span class="token operator">||</span>     <span class="token operator">||</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="额外规则"><a href="#额外规则" class="headerlink" title="额外规则"></a>额外规则</h3><p><code>phpcs</code>自带的规则集比较少，这里推荐一组规则集<a href="https://github.com/slevomat/coding-standard">slevomat/coding-standard</a>，最新版本使用了做了自动安装，使用体验非常丝滑。</p>
+<h3 id="额外规则"><a href="#额外规则" class="headerlink" title="额外规则"></a>额外规则</h3><p><code>phpcs</code>自带的规则集比较少，这里推荐一组规则集<a href="https://github.com/slevomat/coding-standard">slevomat/coding-standard</a>，最新版本做了自动安装，使用体验非常丝滑。</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"><span class="token function">composer</span> require slevomat/coding-standard --dev<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>如果你的项目中有使用ORM、数据库的字段有使用下划线、并且希望变量名强制使用小驼峰，那目前截至v3.5的<code>phpcs</code>自带规则<code>Squiz.NamingConventions.ValidVariableName.NotCamelCaps</code>将无法实现你的需求，会把<code>$user-&gt;created_at</code>误判为不规范，参照<a href="https://github.com/squizlabs/PHP_CodeSniffer/issues/1773">Issue#1773</a></p>
